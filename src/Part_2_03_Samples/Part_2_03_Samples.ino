@@ -39,8 +39,17 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=395.3333282470703,341.333328247070
 // GUItool: end automatically generated code
 
 ///////////////////////////////////
+#define NBR_SEQUENCES 4
 
+typedef enum {
+  MENU,
+  NORMAL,
+}etat;
 
+void affichage_menu_sequences(int position_actuelle){
+  //à changer quand on aura un écran (si on en a un...)
+  printf("selectionné: %d\n", position_actuelle);
+}
 
 
 
@@ -48,39 +57,88 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=395.3333282470703,341.333328247070
 Bounce button0 = Bounce(0, 15);
 Bounce button1 = Bounce(1, 15);  // 15 ms debounce time
 Bounce button2 = Bounce(2, 15);
+Bounce bouton_sequence = Bounce(3, 15);
+Bounce bouton_haut = Bounce(4, 15);
+Bounce bouton_bas = Bounce(5, 15);
+
+//autres variables
+etat fonctionnement=NORMAL;
+int position_menu=0;
 
 
 void setup() {
   pinMode(0, INPUT_PULLUP);
   pinMode(1, INPUT_PULLUP);
   pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
+  pinMode(5, INPUT_PULLUP);
   AudioMemory(10);
   sgtl5000_1.enable();
-  sgtl5000_1.volume(0.5);
-  mixer1.gain(0, 0.4);
-  mixer1.gain(1, 0.4);
-  mixer1.gain(2, 0.4);
-  mixer1.gain(3, 0.4);
+  sgtl5000_1.volume(1);
+  mixer1.gain(0, 0.8);
+  mixer1.gain(1, 0.8);
+  mixer1.gain(2, 0.8);
+  mixer1.gain(3, 0.8);
   printf("a\n");
 }
 
-void loop() {
-  // Update all the button objects
+void fonctionnement_sample(){
   button0.update();
   button1.update();
   button2.update();
 
   if (button0.fallingEdge()) {
-    printf("bah aussi\n");
+    printf("son bouton 1\n");
     playMem1.play(AudioSampleSnare);
   }
   if (button1.fallingEdge()) {
+    printf("son bouton 2\n");
     playMem2.play(AudioSampleTomtom);
   }
   if (button2.fallingEdge()) {
+    printf("son bouton 3\n");
     playMem3.play(AudioSampleHihat);
   }
+}
 
+int baisser_position(int position){
+  if (position--<=0){
+    return 0;
+  }
+  return position--;
+}
+
+int monter_position(int position, int max){
+  if (position++>=max){
+    return max;
+  }
+  return position++;
+}
+
+void loop() {
+  // Update all the button objects
+  if (1==1){
+    bouton_haut.update();
+    bouton_bas.update();
+    if (bouton_haut.fallingEdge()){
+      position_menu=baisser_position(position_menu);
+      affichage_menu_sequences(position_menu);
+    }
+    if (bouton_bas.fallingEdge()){
+      position_menu=monter_position(position_menu, NBR_SEQUENCES);
+      affichage_menu_sequences(position_menu);
+    }
+    //affichage_menu_sequences(position_menu);
+  }
+  fonctionnement_sample();
+
+  bouton_sequence.update();
+  if (bouton_sequence.fallingEdge()){
+    printf("bonjour je suis censé afficher un menu\n");
+    fonctionnement=MENU;
+    printf("fonct:%d\n",fonctionnement);
+  }
 /*
   int knob = analogRead(A3);
   if (button0.fallingEdge()) {
