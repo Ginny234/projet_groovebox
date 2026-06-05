@@ -40,13 +40,61 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=395.3333282470703,341.333328247070
 
 ///////////////////////////////////
 #define NBR_SEQUENCES 4
+#define NBR_BOUTONS 7
 
 typedef enum {
   MENU,
   NORMAL,
+  ENREGISTREMENT_SEQUENCE,
 }etat;
+typedef struct sequence sequence;
+struct sequence{
+  int id_sample;
+  sequence* suiv;
+};
 
-void affichage_menu_sequences(int position_actuelle){
+sequence* initia_sequence(int id_sample){
+  sequence* nv_seq=malloc(sizeof(sequence));
+  nv_seq->id_sample=id_sample;
+  nv_seq->suiv=NULL;
+  return nv_seq;
+}
+
+sequence* ajouter_sequence(sequence* nv_sample, sequence* seq){
+  if(seq!=NULL){
+    sequence* temp=seq;
+    while(temp->suiv!=NULL){
+      temp=temp->suiv;
+    }
+    temp->suiv=nv_sample;
+  }
+  else{
+    seq=nv_sample;
+  }
+  return seq;
+}
+
+void lire_sample(int id){
+  switch(id){
+    case 0:
+      playMem1.play(AudioSampleSnare);
+    case 1:
+      playMem2.play(AudioSampleTomtom);
+    case 2:
+      playMem3.play(AudioSampleHihat);
+  }
+}
+
+void lire_sequence(sequence* seq){
+  sequence* temp=seq;
+  while(temp!=NULL){
+    temp=temp->suiv;
+    printf("%d\n", temp->id_sample);
+    //lire_sample(temp->id_sample);
+  }
+}
+
+void affichage_menu(int position_actuelle){
   //à changer quand on aura un écran (si on en a un...)
   printf("selectionné: %d\n", position_actuelle);
 }
@@ -60,19 +108,29 @@ Bounce button2 = Bounce(2, 15);
 Bounce bouton_sequence = Bounce(3, 15);
 Bounce bouton_haut = Bounce(4, 15);
 Bounce bouton_bas = Bounce(5, 15);
+Bounce bouton_ok = Bounce(6, 15);
 
 //autres variables
-etat fonctionnement=NORMAL;
+etat fonctionnement;
 int position_menu=0;
+sequence* tab_seq[NBR_SEQUENCES];
 
 
 void setup() {
-  pinMode(0, INPUT_PULLUP);
+  for (int i=0; i!=NBR_BOUTONS; i++){
+    pinMode(i, INPUT_PULLUP);
+  }
+  for(int i=0; i!=NBR_SEQUENCES; i++){
+    tab_seq[i]=NULL;
+  }
+  fonctionnement=NORMAL;
+  /*pinMode(0, INPUT_PULLUP);
   pinMode(1, INPUT_PULLUP);
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
   pinMode(4, INPUT_PULLUP);
   pinMode(5, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);*/
   AudioMemory(10);
   sgtl5000_1.enable();
   sgtl5000_1.volume(1);
@@ -118,23 +176,68 @@ int monter_position(int position, int max){
 
 void loop() {
   // Update all the button objects
-  if (1==1){
-    bouton_haut.update();
-    bouton_bas.update();
+  bouton_haut.update();
+  bouton_bas.update();
+  bouton_ok.update();
+  bouton_sequence.update();
+  /*if (bouton_ok.fallingEdge()){
+      printf("ok\n");
+  }*/
+  if (bouton_haut.fallingEdge()){
+      printf("bas\n");
+    }
+  if (bouton_bas.fallingEdge()){
+      printf("haut\n");
+    }
+  if (fonctionnement==MENU){
+    //printf("aafg\n");
     if (bouton_haut.fallingEdge()){
+      
       position_menu=baisser_position(position_menu);
-      affichage_menu_sequences(position_menu);
+      affichage_menu(position_menu);
     }
     if (bouton_bas.fallingEdge()){
       position_menu=monter_position(position_menu, NBR_SEQUENCES);
-      affichage_menu_sequences(position_menu);
+      affichage_menu(position_menu);
+    }
+    if (bouton_sequence.fallingEdge()){
+      //fonctionnement=NORMAL;
+    }
+    //rising edge p
+    if (bouton_ok.risingEdge()){
+      if(tab_seq[position_menu]!=NULL){
+        printf("je suis censer lire  une sequence\n");
+        lire_sequence(tab_seq[position_menu]);
+      }
+      else{
+        fonctionnement=ENREGISTREMENT_SEQUENCE;
+        printf("fonct:%d\n",fonctionnement);
+        printf("enregistrement de sequence\n");
+      }
     }
     //affichage_menu_sequences(position_menu);
   }
+  if(fonctionnement==ENREGISTREMENT_SEQUENCE){
+    if (button0.fallingEdge()) {
+      tab_seq[position_menu]=ajouter_sequence(initia_sequence(0), tab_seq[position_menu]);
+      printf("son bouton 1 seq\n");
+    }
+    if (button1.fallingEdge()) {
+      tab_seq[position_menu]=ajouter_sequence(initia_sequence(1), tab_seq[position_menu]);
+      printf("son bouton 2 seq\n");
+    }
+    if (button2.fallingEdge()) {
+      tab_seq[position_menu]=ajouter_sequence(initia_sequence(2), tab_seq[position_menu]);
+      printf("son bouton 3 seq\n");
+    }
+    if (bouton_ok.fallingEdge()){
+      printf("enregistrement terminé\n");
+      fonctionnement=NORMAL;
+    }
+  }
   fonctionnement_sample();
 
-  bouton_sequence.update();
-  if (bouton_sequence.fallingEdge()){
+  if (bouton_sequence.fallingEdge() && fonctionnement==NORMAL){
     printf("bonjour je suis censé afficher un menu\n");
     fonctionnement=MENU;
     printf("fonct:%d\n",fonctionnement);
