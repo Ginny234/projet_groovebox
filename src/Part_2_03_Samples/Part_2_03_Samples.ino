@@ -69,7 +69,7 @@ sequence* ajouter_sequence(sequence* nv_sample, sequence* seq){
     temp->suiv=nv_sample;
   }
   else{
-    seq=nv_sample;
+    return nv_sample;
   }
   return seq;
 }
@@ -78,19 +78,23 @@ void lire_sample(int id){
   switch(id){
     case 0:
       playMem1.play(AudioSampleSnare);
+      break;
     case 1:
       playMem2.play(AudioSampleTomtom);
+      break;
     case 2:
       playMem3.play(AudioSampleHihat);
+      break;
   }
 }
 
 void lire_sequence(sequence* seq){
   sequence* temp=seq;
   while(temp!=NULL){
-    temp=temp->suiv;
     printf("%d\n", temp->id_sample);
-    //lire_sample(temp->id_sample);
+    lire_sample(temp->id_sample);
+    delay(400);
+    temp=temp->suiv;
   }
 }*/
 
@@ -236,7 +240,7 @@ void loop() {
     if (bouton_sequence.fallingEdge()){
       //fonctionnement=NORMAL;
     }
-    //rising edge p
+    //rising edge parce que si c'est pas l'inverse ça considérait qu'on appuyait sur le bouton 2 fois
     if (bouton_ok.risingEdge()){
       if(tab_seq[position_menu]!=NULL){
         printf("je suis censer lire  une sequence\n");
@@ -270,7 +274,7 @@ void loop() {
   }
   fonctionnement_sample();
 
-  if (bouton_sequence.fallingEdge() && fonctionnement==NORMAL){
+  if (bouton_sequence.fallingEdge() /*&& fonctionnement==NORMAL*/){
     printf("bonjour je suis censé afficher un menu\n");
     fonctionnement=MENU;
     printf("fonct:%d\n",fonctionnement);
