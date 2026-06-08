@@ -47,7 +47,7 @@ typedef enum {
   NORMAL,
   ENREGISTREMENT_SEQUENCE,
 }etat;
-typedef struct sequence sequence;
+/*typedef struct sequence sequence;
 struct sequence{
   int id_sample;
   sequence* suiv;
@@ -92,7 +92,7 @@ void lire_sequence(sequence* seq){
     printf("%d\n", temp->id_sample);
     //lire_sample(temp->id_sample);
   }
-}
+}*/
 
 void affichage_menu(int position_actuelle){
   //à changer quand on aura un écran (si on en a un...)
@@ -113,16 +113,20 @@ Bounce bouton_ok = Bounce(6, 15);
 //autres variables
 etat fonctionnement;
 int position_menu=0;
-sequence* tab_seq[NBR_SEQUENCES];
+//sequence* tab_seq[NBR_SEQUENCES];
+float volume_courant=0.5f;  // Volume initial entre 0 et 1
+const float VOLUME_MIN=0.0f;
+const float VOLUME_MAX=1.0f;
+const float VOLUME_STEP=0.05f;
 
 
 void setup() {
   for (int i=0; i!=NBR_BOUTONS; i++){
     pinMode(i, INPUT_PULLUP);
   }
-  for(int i=0; i!=NBR_SEQUENCES; i++){
-    tab_seq[i]=NULL;
-  }
+  //for(int i=0; i!=NBR_SEQUENCES; i++){
+  //  tab_seq[i]=NULL;
+  //}
   fonctionnement=NORMAL;
   /*pinMode(0, INPUT_PULLUP);
   pinMode(1, INPUT_PULLUP);
@@ -133,7 +137,7 @@ void setup() {
   pinMode(6, INPUT_PULLUP);*/
   AudioMemory(10);
   sgtl5000_1.enable();
-  sgtl5000_1.volume(1);
+  sgtl5000_1.volume(volume_courant);
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
   mixer1.gain(2, 0.8);
@@ -174,6 +178,28 @@ int monter_position(int position, int max){
   return position++;
 }
 
+void augmenter_volume(){
+  if (volume_courant < VOLUME_MAX){
+    volume_courant += VOLUME_STEP;
+    if (volume_courant > VOLUME_MAX){
+      volume_courant = VOLUME_MAX;
+    }
+    sgtl5000_1.volume(volume_courant);
+    printf("Volume augmente: %.2f\n", volume_courant);
+  }
+}
+
+void baisser_volume(){
+  if (volume_courant > VOLUME_MIN){
+    volume_courant -= VOLUME_STEP;
+    if (volume_courant < VOLUME_MIN){
+      volume_courant = VOLUME_MIN;
+    }
+    sgtl5000_1.volume(volume_courant);
+    printf("Volume baisse: %.2f\n", volume_courant);
+  }
+}
+
 void loop() {
   // Update all the button objects
   bouton_haut.update();
@@ -183,13 +209,20 @@ void loop() {
   /*if (bouton_ok.fallingEdge()){
       printf("ok\n");
   }*/
-  if (bouton_haut.fallingEdge()){
-      printf("bas\n");
+  fonctionnement_sample();
+  // Controle du volume en etat NORMAL
+  if (fonctionnement==NORMAL){
+    if (bouton_haut.fallingEdge()){
+      augmenter_volume();
+      printf("je dois augmenter le volume");
     }
-  if (bouton_bas.fallingEdge()){
-      printf("haut\n");
+    if (bouton_bas.fallingEdge()){
+      baisser_volume();
+      printf("je dois baisser le volume");
     }
-  if (fonctionnement==MENU){
+  }
+  
+  /*if (fonctionnement==MENU){
     //printf("aafg\n");
     if (bouton_haut.fallingEdge()){
       
@@ -241,8 +274,8 @@ void loop() {
     printf("bonjour je suis censé afficher un menu\n");
     fonctionnement=MENU;
     printf("fonct:%d\n",fonctionnement);
-  }
-/*
+  }*/
+
   int knob = analogRead(A3);
   if (button0.fallingEdge()) {
     if (knob < 512) {
@@ -265,7 +298,7 @@ void loop() {
       playMem3.play(AudioSampleCashregister);
     }
   }
-*/
+
 
 }
 
