@@ -47,7 +47,8 @@ typedef enum {
   NORMAL,
   ENREGISTREMENT_SEQUENCE,
 }etat;
-/*typedef struct sequence sequence;
+
+typedef struct sequence sequence;
 struct sequence{
   int id_sample;
   sequence* suiv;
@@ -96,7 +97,7 @@ void lire_sequence(sequence* seq){
     delay(400);
     temp=temp->suiv;
   }
-}*/
+}
 
 void affichage_menu(int position_actuelle){
   //à changer quand on aura un écran (si on en a un...)
@@ -117,7 +118,7 @@ Bounce bouton_ok = Bounce(6, 15);
 //autres variables
 etat fonctionnement;
 int position_menu=0;
-//sequence* tab_seq[NBR_SEQUENCES];
+sequence* tab_seq[NBR_SEQUENCES];
 float volume_courant=0.5f;  // Volume initial entre 0 et 1
 const float VOLUME_MIN=0.0f;
 const float VOLUME_MAX=1.0f;
@@ -210,9 +211,7 @@ void loop() {
   bouton_bas.update();
   bouton_ok.update();
   bouton_sequence.update();
-  /*if (bouton_ok.fallingEdge()){
-      printf("ok\n");
-  }*/
+
   fonctionnement_sample();
   // Controle du volume en etat NORMAL
   if (fonctionnement==NORMAL){
@@ -226,7 +225,7 @@ void loop() {
     }
   }
   
-  /*if (fonctionnement==MENU){
+  if (fonctionnement==MENU){
     //printf("aafg\n");
     if (bouton_haut.fallingEdge()){
       
@@ -278,7 +277,7 @@ void loop() {
     printf("bonjour je suis censé afficher un menu\n");
     fonctionnement=MENU;
     printf("fonct:%d\n",fonctionnement);
-  }*/
+  }
 
   int knob = analogRead(A3);
   if (button0.fallingEdge()) {
