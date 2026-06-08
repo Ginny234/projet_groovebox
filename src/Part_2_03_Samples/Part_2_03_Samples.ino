@@ -21,6 +21,8 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 // GUItool: begin automatically generated code
 AudioPlayMemory          playMem3;  //xy=220.33332061767578,352.333309173584
@@ -41,6 +43,13 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=395.3333282470703,341.333328247070
 ///////////////////////////////////
 #define NBR_SEQUENCES 4
 #define NBR_BOUTONS 7
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
 
 typedef enum {
   MENU,
@@ -100,8 +109,17 @@ void lire_sequence(sequence* seq){
 }
 
 void affichage_menu(int position_actuelle){
-  //à changer quand on aura un écran (si on en a un...)
-  printf("selectionné: %d\n", position_actuelle);
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  //display.print("test\n");
+  //display.display();
+  for(int i=0; i!=NBR_SEQUENCES; i++){
+    if(i==position_actuelle){
+      display.print("->");
+    }
+    display.print("Sequence\n");
+  }
+  display.display();
 }
 
 
@@ -126,20 +144,27 @@ const float VOLUME_STEP=0.05f;
 
 
 void setup() {
+  Serial.begin(9600);
   for (int i=0; i!=NBR_BOUTONS; i++){
     pinMode(i, INPUT_PULLUP);
   }
   //for(int i=0; i!=NBR_SEQUENCES; i++){
   //  tab_seq[i]=NULL;
   //}
+
+  // Initialisation I2C sur Teensy (pins 18/19 par défaut)
+  Wire.begin();
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println("Erreur OLED");
+    while (1);
+  }
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
   fonctionnement=NORMAL;
-  /*pinMode(0, INPUT_PULLUP);
-  pinMode(1, INPUT_PULLUP);
-  pinMode(2, INPUT_PULLUP);
-  pinMode(3, INPUT_PULLUP);
-  pinMode(4, INPUT_PULLUP);
-  pinMode(5, INPUT_PULLUP);
-  pinMode(6, INPUT_PULLUP);*/
   AudioMemory(10);
   sgtl5000_1.enable();
   sgtl5000_1.volume(volume_courant);
@@ -212,6 +237,11 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
 
+  /*display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("test\n");
+  display.display();*/
+
   fonctionnement_sample();
   // Controle du volume en etat NORMAL
   if (fonctionnement==NORMAL){
@@ -226,15 +256,16 @@ void loop() {
   }
   
   if (fonctionnement==MENU){
-    //printf("aafg\n");
+    affichage_menu(position_menu);
     if (bouton_haut.fallingEdge()){
-      
+      printf("haut\n");
       position_menu=baisser_position(position_menu);
       affichage_menu(position_menu);
     }
     if (bouton_bas.fallingEdge()){
-      position_menu=monter_position(position_menu, NBR_SEQUENCES);
+      position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
       affichage_menu(position_menu);
+      printf("bas\n");
     }
     if (bouton_sequence.fallingEdge()){
       //fonctionnement=NORMAL;
