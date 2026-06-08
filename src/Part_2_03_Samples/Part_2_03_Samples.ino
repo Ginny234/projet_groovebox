@@ -46,6 +46,7 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=395.3333282470703,341.333328247070
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
+#define MARGE_HMIN 5
 
 #define OLED_RESET -1
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -109,8 +110,7 @@ void lire_sequence(sequence* seq){
 }
 
 void affichage_menu(int position_actuelle){
-  display.clearDisplay();
-  display.setCursor(0, 0);
+  display.setCursor(MARGE_HMIN, 0);
   //display.print("test\n");
   //display.display();
   for(int i=0; i!=NBR_SEQUENCES; i++){
@@ -119,9 +119,30 @@ void affichage_menu(int position_actuelle){
     }
     display.print("Sequence\n");
   }
-  display.display();
+  //display.display();
 }
 
+void affichage_sample(int id_sample){
+  //à changer si on veut afficher des icones
+  //char* id;
+  //sprintf("Sample jouée: %d", id);
+  //display.setCursor(SCREEN_HEIGHT/2/*-strlen(id)/2*/, SCREEN_WIDTH/*-strlen(id)/2*/);
+  display.setCursor(0, MARGE_HMIN);
+  display.print("Sample jouée");
+  //display.display();
+}
+
+void affichage_normal(){
+  if(playMem1.isPlaying()){
+    affichage_sample(0);
+  }
+  if(playMem2.isPlaying()){
+    affichage_sample(1);
+  }
+    if(playMem3.isPlaying()){
+    affichage_sample(2);
+  }
+}
 
 
 // Bounce objects to read pushbuttons 
@@ -137,11 +158,25 @@ Bounce bouton_ok = Bounce(6, 15);
 etat fonctionnement;
 int position_menu=0;
 sequence* tab_seq[NBR_SEQUENCES];
-float volume_courant=0.5f;  // Volume initial entre 0 et 1
+float volume_courant=1.0f;  // Volume initial entre 0 et 1
 const float VOLUME_MIN=0.0f;
 const float VOLUME_MAX=1.0f;
 const float VOLUME_STEP=0.05f;
 
+
+void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
+  char* vol;
+  char* grp="Groupe Vocodeur\n";
+  sprintf(vol, "Vol:%f", volume_courant*100);
+  printf(vol);
+
+  //display.setCursor(0, SCREEN_WIDTH-strlen(vol)*10-3);
+
+  //display.print(vol);
+  display.setCursor(0, 0);
+  display.print("Groupe Vocodeur\n");
+  display.display();
+}
 
 void setup() {
   Serial.begin(9600);
@@ -236,15 +271,21 @@ void loop() {
   bouton_bas.update();
   bouton_ok.update();
   bouton_sequence.update();
-
-  /*display.clearDisplay();
-  display.setCursor(0, 0);
-  display.print("test\n");
-  display.display();*/
-
+  display.clearDisplay();
+  
+  //affichage_normal();
   fonctionnement_sample();
   // Controle du volume en etat NORMAL
   if (fonctionnement==NORMAL){
+    if(playMem1.isPlaying() || playMem2.isPlaying() || playMem3.isPlaying()){
+      //affichage_sample(0);
+      display.setCursor(0, 0);
+      display.print("Sample jouée");
+      //display.display();
+      //delay(300);
+      printf("je deviens folle\n");
+    }
+    //affichage_normal();
     if (bouton_haut.fallingEdge()){
       augmenter_volume();
       printf("je dois augmenter le volume");
@@ -267,11 +308,8 @@ void loop() {
       affichage_menu(position_menu);
       printf("bas\n");
     }
-    if (bouton_sequence.fallingEdge()){
-      //fonctionnement=NORMAL;
-    }
     //rising edge parce que si c'est pas l'inverse ça considérait qu'on appuyait sur le bouton 2 fois
-    if (bouton_ok.risingEdge()){
+    if (bouton_ok.fallingEdge()){
       if(tab_seq[position_menu]!=NULL){
         printf("je suis censer lire  une sequence\n");
         lire_sequence(tab_seq[position_menu]);
@@ -302,15 +340,26 @@ void loop() {
       fonctionnement=NORMAL;
     }
   }
+
   fonctionnement_sample();
 
-  if (bouton_sequence.fallingEdge() /*&& fonctionnement==NORMAL*/){
-    printf("bonjour je suis censé afficher un menu\n");
-    fonctionnement=MENU;
-    printf("fonct:%d\n",fonctionnement);
+  if (bouton_sequence.fallingEdge()){
+    if(fonctionnement==NORMAL){
+      fonctionnement=MENU;
+      printf("bonjour je suis censé afficher un menu\n");
+    }
+    else if(fonctionnement==MENU){
+      fonctionnement=NORMAL;
+      printf("bonjour je retourne au vide\n");
+    }
   }
 
-  int knob = analogRead(A3);
+  display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
+  display.print("GROUPE VOCODEUR\n");
+  //affichage_base();
+  display.display();
+
+  /*int knob = analogRead(A3);
   if (button0.fallingEdge()) {
     if (knob < 512) {
       playMem1.play(AudioSampleSnare);
@@ -331,7 +380,7 @@ void loop() {
     } else {
       playMem3.play(AudioSampleCashregister);
     }
-  }
+  }*/
 
 
 }
