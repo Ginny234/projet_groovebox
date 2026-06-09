@@ -53,6 +53,7 @@ void loop() {
   bouton_bas.update();
   bouton_ok.update();
   bouton_sequence.update();
+  
   display.clearDisplay();
   
   //affichage_normal();
@@ -60,7 +61,7 @@ void loop() {
   // Controle du volume en etat NORMAL
   if (fonctionnement==NORMAL){
     affichage_normal();
-    
+
     if (bouton_haut.fallingEdge()){
       augmenter_volume();
       printf("je dois augmenter le volume");
@@ -129,9 +130,9 @@ void loop() {
     }
   }
 
-  display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
-  display.print("GROUPE VOCODEUR\n");
-  //affichage_base();
+  /*display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
+  display.print("GROUPE VOCODEUR\n");*/
+  affichage_base();
   display.display();
 
   /*int knob = analogRead(A3);

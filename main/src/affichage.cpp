@@ -40,15 +40,16 @@ void affichage_normal(){
 
 
 void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
-  char* vol;
-  char* grp="Groupe Vocodeur\n";
-  sprintf(vol, "Vol:%f", volume_courant*100);
-  printf(vol);
+  char vol[10];
+  sprintf(vol, "Vol:%d", (int)(volume_courant*100));
+  //printf(vol);
 
   //display.setCursor(0, SCREEN_WIDTH-strlen(vol)*10-3);
 
   //display.print(vol);
-  display.setCursor(0, 0);
+  display.setCursor(SCREEN_WIDTH/2-strlen("Groupe Vocodeur")*11/4, SCREEN_HEIGHT-8);
   display.print("Groupe Vocodeur\n");
+  display.setCursor(SCREEN_WIDTH-strlen(vol)*6, 0);
+  display.print(vol);
   display.display();
 }
