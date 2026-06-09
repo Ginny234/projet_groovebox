@@ -14,13 +14,16 @@ void affichage_menu(int position_actuelle){
 }
 
 void affichage_sample(int id_sample){
-  //à changer si on veut afficher des icones
-  //char* id;
-  //sprintf("Sample jouée: %d", id);
-  //display.setCursor(SCREEN_HEIGHT/2/*-strlen(id)/2*/, SCREEN_WIDTH/*-strlen(id)/2*/);
-  display.setCursor(0, MARGE_HMIN);
-  display.print("Sample jouée");
-  //display.display();
+    //à changer si on veut afficher des icones
+    char id[10];
+    sprintf(id,"Sample %d", id_sample+1);
+    printf("%s\n",id);
+    display.setCursor(0, 0);
+    display.print(id);
+    //display.setCursor(SCREEN_HEIGHT/2/*-strlen(id)/2*/, SCREEN_WIDTH/*-strlen(id)/2*/);
+    //display.setCursor(0, MARGE_HMIN);
+    //display.print();
+    //display.display();
 }
 
 void affichage_normal(){
