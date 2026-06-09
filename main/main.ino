@@ -53,15 +53,20 @@ void loop() {
   bouton_bas.update();
   bouton_ok.update();
   bouton_sequence.update();
-  
   display.clearDisplay();
   
   //affichage_normal();
   fonctionnement_sample();
   // Controle du volume en etat NORMAL
   if (fonctionnement==NORMAL){
+    if(playMem1.isPlaying() || playMem2.isPlaying() || playMem3.isPlaying()){
+      affichage_sample(0);
+      //display.setCursor(0, 0);
+      //display.print("Sample jouée");
+      //display.display();
+      //delay(300);
+    }
     affichage_normal();
-
     if (bouton_haut.fallingEdge()){
       augmenter_volume();
       printf("je dois augmenter le volume");

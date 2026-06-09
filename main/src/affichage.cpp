@@ -1,16 +1,19 @@
 #include "affichage.h"
 
 void affichage_menu(int position_actuelle){
-  display.setCursor(MARGE_HMIN, 0);
-  //display.print("test\n");
-  //display.display();
+  display.setCursor(0, 10);
   for(int i=0; i!=NBR_SEQUENCES; i++){
     if(i==position_actuelle){
       display.print("->");
     }
-    display.print("Sequence\n");
+    /*char* nom;
+    sprintf(nom,"Sequence %d", i);*/
+    display.print("Sequence");
+    if(tab_seq[i]==NULL){
+        display.print("- Vide");
+    }
+    display.print("\n");
   }
-  //display.display();
 }
 
 void affichage_sample(int id_sample){
@@ -20,10 +23,6 @@ void affichage_sample(int id_sample){
     printf("%s\n",id);
     display.setCursor(0, 0);
     display.print(id);
-    //display.setCursor(SCREEN_HEIGHT/2/*-strlen(id)/2*/, SCREEN_WIDTH/*-strlen(id)/2*/);
-    //display.setCursor(0, MARGE_HMIN);
-    //display.print();
-    //display.display();
 }
 
 void affichage_normal(){
