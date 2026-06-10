@@ -37,13 +37,15 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
 
   fonctionnement=NORMAL;
-  AudioMemory(10);
+  AudioMemory(20);
   sgtl5000_1.enable();
   sgtl5000_1.volume(volume_courant);
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
   mixer1.gain(2, 0.8);
   mixer1.gain(3, 0.8);
+  granular1.begin(granularMemory, GRANULAR_MEMORY_SIZE);
+  granular1.beginPitchShift(30.0f);
   printf("a\n");
 }
 
@@ -54,6 +56,9 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
+  float knob = (float)analogRead(A3) / 1023.0f;
+  float pitchRatio = powf(2.0f, knob * 4.0f - 2.0f);
+  granular1.setSpeed(pitchRatio);
   
   //affichage_normal();
   fonctionnement_sample();
