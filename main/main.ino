@@ -68,11 +68,11 @@ void loop() {
     affichage_normal();
     if (bouton_haut.fallingEdge()){
       augmenter_volume();
-      printf("je dois augmenter le volume");
+      printf("je dois augmenter le volume\n");
     }
     if (bouton_bas.fallingEdge()){
       baisser_volume();
-      printf("je dois baisser le volume");
+      printf("je dois baisser le volume\n");
     }
   }
   
@@ -113,7 +113,6 @@ void loop() {
     }
   }*/
 
-  fonctionnement_sample();
 
   if (bouton_sequence.fallingEdge()){
     if(fonctionnement==NORMAL){

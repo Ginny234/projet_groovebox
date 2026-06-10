@@ -22,29 +22,39 @@ sequence* ajouter_sequence(sequence* nv_sample, sequence* seq){
 }
 
 void lire_sequence(sequence* seq){
-  sequence* temp=seq;
-  while(temp!=NULL){
-    printf("%d\n", temp->id_sample);
-    fonctionnement_sample();
-    switch(temp->id_sample){
-    case 0:
-      playMem4.play(AudioSampleSnare);
-      break;
-    case 1:
-      playMem4.play(AudioSampleTomtom);
-      break;
-    case 2:
-      playMem4.play(AudioSampleHihat);
-      //playMem3.play(AudioSampleCashregister);
-      break;
-  }
-  temp=temp->suiv;
-  unsigned long debut_attente=millis();
-  while(millis()-debut_attente<400){
-    fonctionnement_sample();
-  }
-  printf("yayyyy\n");
-    //delay(400);
-    //temp=temp->suiv;
-  }
+  bool sortie=false;
+  do{
+    bouton_ok.update();
+    printf("okkkk\n");
+    sequence* temp=seq;
+    while(temp!=NULL){
+      printf("%d\n", temp->id_sample);
+      //fonctionnement_sample();
+      switch(temp->id_sample){
+      case 0:
+        playMem4.play(AudioSampleSnare);
+        break;
+      case 1:
+        playMem4.play(AudioSampleTomtom);
+        break;
+      case 2:
+        playMem4.play(AudioSampleHihat);
+        //playMem3.play(AudioSampleCashregister);
+        break;
+    }
+    
+    temp=temp->suiv;
+    unsigned long debut_attente=millis();
+    while(millis()-debut_attente<350){
+      fonctionnement_sample();
+      bouton_ok.update();
+      if(bouton_ok.fallingEdge()){
+        sortie=true;
+      }
+    }
+    printf("yayyyy\n");
+      //delay(400);
+      //temp=temp->suiv;
+    }
+  }while(bouton_ok.fallingEdge()==false && sortie==false);
 }
