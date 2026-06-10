@@ -26,6 +26,7 @@ Bounce bouton_sequence = Bounce(3, 15);
 Bounce bouton_haut = Bounce(4, 15);
 Bounce bouton_bas = Bounce(5, 15);
 Bounce bouton_ok = Bounce(6, 15);
+Bounce bouton_test = Bounce(7, 15);
 
 //autres variables
 etat fonctionnement;
