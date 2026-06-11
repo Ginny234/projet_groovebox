@@ -30,6 +30,10 @@
 
 #define OLED_RESET -1
 
+#define CLK 34
+#define DT 33
+#define SW 7
+
 typedef enum {
   MENU,
   NORMAL,
