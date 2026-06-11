@@ -36,6 +36,8 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
+  analogReadResolution(10)
+
   fonctionnement=NORMAL;
   AudioMemory(20);
   sgtl5000_1.enable();
@@ -56,7 +58,7 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
-  float knob = (float)analogRead(A3) / 1023.0f;
+float knob = (float)analogRead(A7) / 1023.0f;
   float pitchRatio = powf(2.0f, knob * 4.0f - 2.0f);
   granular1.setSpeed(pitchRatio);
   
