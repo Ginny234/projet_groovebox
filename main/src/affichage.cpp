@@ -6,21 +6,23 @@ void affichage_menu(int position_actuelle){
     if(i==position_actuelle){
       display.print("->");
     }
-    /*char* nom;
-    sprintf(nom,"Sequence %d", i);*/
-    display.print("Sequence");
+    char nom[15];
+    sprintf(nom,"Sequence %d", i+1);
+    //printf("%s", nom);
+    display.print(nom);
     if(tab_seq[i]==NULL){
         display.print("- Vide");
     }
     display.print("\n");
   }
+  display.print("Maintenir ok pour modifier\n");
 }
 
 void affichage_sample(int id_sample){
     //à changer si on veut afficher des icones
     char id[10];
     sprintf(id,"Sample %d", id_sample+1);
-    printf("%s\n",id);
+    //printf("%s\n",id);
     display.setCursor(0, 0);
     display.print(id);
 }
@@ -37,7 +39,6 @@ void affichage_normal(){
   }
 }
 
-
 void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
   char vol[10];
   sprintf(vol, "Vol:%d", (int)(volume_courant*100));
@@ -51,4 +52,13 @@ void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
   display.setCursor(SCREEN_WIDTH-strlen(vol)*6, 0);
   display.print(vol);
   display.display();
+}
+
+void affichage_enregistrement(){
+    display.clearDisplay();
+    affichage_normal();
+    display.setCursor(SCREEN_WIDTH/2-strlen("Enregistrement")*11/4, SCREEN_HEIGHT-35);
+    display.print("Enregistrement\n");
+    display.setCursor(0, SCREEN_HEIGHT-25);
+    display.print("Appuyez sur ok pour \nterminer");
 }

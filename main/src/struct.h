@@ -34,6 +34,7 @@ typedef enum {
   MENU,
   NORMAL,
   ENREGISTREMENT_SEQUENCE,
+  LECTURE_SEQUENCE,
 }etat;
 
 typedef struct sequence sequence;
