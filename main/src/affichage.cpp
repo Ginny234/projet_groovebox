@@ -18,8 +18,8 @@ void affichage_menu(int position_actuelle){
 
 void affichage_sample(int id_sample){
     //à changer si on veut afficher des icones
-    char id[10];
-    sprintf(id,"Sample %d", id_sample+1);
+  char id[32];
+  snprintf(id, sizeof(id), "Sample %d", id_sample+1);
     printf("%s\n",id);
     display.setCursor(0, 0);
     display.print(id);

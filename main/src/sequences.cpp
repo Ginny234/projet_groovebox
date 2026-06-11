@@ -1,7 +1,7 @@
 #include "sequences.h"
 
 sequence* initia_sequence(int id_sample){
-  sequence* nv_seq=malloc(sizeof(sequence));
+  sequence* nv_seq=new sequence;
   nv_seq->id_sample=id_sample;
   nv_seq->suiv=NULL;
   return nv_seq;
