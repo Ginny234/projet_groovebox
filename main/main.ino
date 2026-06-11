@@ -17,6 +17,8 @@
 
 bool lit_sequence;
 int sequence_lue;
+unsigned long debut_attente;
+unsigned long fin_attente;
 
 void setup() {
   lit_sequence=false;
@@ -126,14 +128,18 @@ void loop() {
   }
   if(bouton_ok.fallingEdge()){
     if(fonctionnement==MENU){
-      if(tab_seq[position_menu]!=NULL){
-        printf("je suis censer lire  une sequence\n");
-        lire_sequence(tab_seq[position_menu]);
+      debut_attente=millis();
+      while(digitalRead(6)==LOW){
+        fin_attente=millis();
       }
-      else{
+      if(fin_attente-debut_attente>3000 || tab_seq[position_menu]==NULL){
         fonctionnement=ENREGISTREMENT_SEQUENCE;
         printf("fonct:%d\n",fonctionnement);
         printf("enregistrement de sequence\n");
+      }
+      else if (tab_seq[position_menu]!=NULL){
+        printf("je suis censer lire  une sequence\n");
+        lire_sequence(tab_seq[position_menu]);
       }
     }
     else if(fonctionnement==ENREGISTREMENT_SEQUENCE){

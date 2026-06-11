@@ -15,6 +15,7 @@ void affichage_menu(int position_actuelle){
     }
     display.print("\n");
   }
+  display.print("Maintenir ok pour modifier\n");
 }
 
 void affichage_sample(int id_sample){
