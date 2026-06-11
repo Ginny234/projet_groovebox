@@ -53,19 +53,8 @@ void setup() {
   mixer1.gain(2, 0.8);
   mixer1.gain(3, 0.8);
   printf("a\n");
-
-  pinMode(CLK, INPUT_PULLUP);
-  pinMode(DT, INPUT_PULLUP);
-  pinMode(SW, INPUT_PULLUP);
 }
-#include <Encoder.h>
 
-// Change these two numbers to the pins connected to your encoder.
-//   Best Performance: both pins have interrupt capability
-//   Good Performance: only the first pin has interrupt capability
-//   Low Performance:  neither pin has interrupt capability
-Encoder myEnc(33, 34);
-long oldPosition  = -999;
 void loop() {
   // Update all the button objects
   bouton_haut.update();
@@ -90,24 +79,8 @@ void loop() {
   }
   
   if (fonctionnement==MENU){
-
-    long newPosition = myEnc.read();
-    if (newPosition != oldPosition) {
-      //Serial.println(newPosition);
-      printf("avant:%d, après:%d\n", newPosition, oldPosition);
-      if(newPosition<oldPosition){
-        position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
-        //printf("haut\n");
-      }
-      else{
-        position_menu=baisser_position(position_menu);
-        //printf("bas\n");
-      }
-      oldPosition = newPosition;
-    }
-    //printf("%d\n", position_menu);
     affichage_menu(position_menu);
-    /*if (bouton_haut.fallingEdge()){
+    if (bouton_haut.fallingEdge()){
       printf("haut\n");
       position_menu=baisser_position(position_menu);
       affichage_menu(position_menu);
@@ -116,7 +89,8 @@ void loop() {
       position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
       affichage_menu(position_menu);
       printf("bas\n");
-    }*/
+    }
+    //affichage_menu_sequences(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
     affichage_enregistrement();
