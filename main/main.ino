@@ -28,6 +28,9 @@ void setup() {
   for (int i=0; i!=NBR_BOUTONS; i++){
     pinMode(i, INPUT_PULLUP);
   }
+  pinMode(CLK, INPUT_PULLUP);
+  pinMode(DT, INPUT_PULLUP);
+  pinMode(SW, INPUT_PULLUP);
   //for(int i=0; i!=NBR_SEQUENCES; i++){
   //  tab_seq[i]=NULL;
   //}
@@ -54,9 +57,6 @@ void setup() {
   mixer1.gain(3, 0.8);
   printf("a\n");
 
-  pinMode(CLK, INPUT_PULLUP);
-  pinMode(DT, INPUT_PULLUP);
-  pinMode(SW, INPUT_PULLUP);
 }
 #include <Encoder.h>
 
@@ -64,7 +64,7 @@ void setup() {
 //   Best Performance: both pins have interrupt capability
 //   Good Performance: only the first pin has interrupt capability
 //   Low Performance:  neither pin has interrupt capability
-Encoder myEnc(33, 34);
+Encoder myEnc(DT, CLK);
 long oldPosition  = -999;
 void loop() {
   // Update all the button objects
@@ -73,9 +73,9 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
+  //Serial.println(AudioMemoryUsageMax());
   
   //affichage_normal();
-  fonctionnement_sample();
   // Controle du volume en etat NORMAL
   if (fonctionnement==NORMAL /*|| fonctionnement==LECTURE_SEQUENCE*/){
     affichage_normal();
@@ -155,10 +155,11 @@ void loop() {
   if(bouton_ok.fallingEdge()){
     if(fonctionnement==MENU){
       debut_attente=millis();
-      while(digitalRead(6)==LOW){
+      while(digitalRead(SW)==LOW){
         fin_attente=millis();
       }
       if(fin_attente-debut_attente>3000 || tab_seq[position_menu]==NULL){
+        tab_seq[position_menu]=NULL;
         fonctionnement=ENREGISTREMENT_SEQUENCE;
         printf("fonct:%d\n",fonctionnement);
         printf("enregistrement de sequence\n");
@@ -167,6 +168,7 @@ void loop() {
         printf("je suis censer lire  une sequence\n");
         lire_sequence(tab_seq[position_menu]);
       }
+      printf("debut:%d, fin:%d\n",debut_attente, fin_attente);
     }
     else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
       printf("enregistrement terminé\n");
@@ -180,6 +182,7 @@ void loop() {
 
   /*display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
   display.print("GROUPE VOCODEUR\n");*/
+  fonctionnement_sample();
   affichage_base();
   display.display();
 

@@ -18,7 +18,7 @@
 #include <Bounce.h>
 
 #define NBR_SEQUENCES 4
-#define NBR_BOUTONS 7
+#define NBR_BOUTONS 6
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -32,7 +32,7 @@
 
 #define CLK 34
 #define DT 33
-#define SW 7
+#define SW 35
 
 typedef enum {
   MENU,
