@@ -14,7 +14,8 @@
 #include "src/modifs_son.h"
 #include "src/samples.h"
 #include "src/sequences.h"
-
+#include "src/microphone.h"
+//commentaire test
 bool lit_sequence;
 int sequence_lue;
 unsigned long debut_attente;
@@ -53,6 +54,7 @@ void setup() {
   mixer1.gain(2, 0.8);
   mixer1.gain(3, 0.8);
   printf("a\n");
+  setupMicrophone();
 }
 
 void loop() {
@@ -62,6 +64,7 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
+  updateMicrophone();
   
   //affichage_normal();
   fonctionnement_sample();
