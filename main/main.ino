@@ -15,6 +15,13 @@
 #include "src/samples.h"
 #include "src/sequences.h"
 
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+
+
 bool lit_sequence;
 int sequence_lue;
 unsigned long debut_attente;
@@ -24,16 +31,11 @@ void setup() {
   lit_sequence=false;
   sequence_lue=-1;
 
-  Serial.begin(9600);
-  for (int i=0; i!=NBR_BOUTONS; i++){
-    pinMode(i, INPUT_PULLUP);
+  for(int i=0; i!=NBR_SEQUENCES; i++){
+    tab_seq[i]=NULL;
   }
-  pinMode(CLK, INPUT_PULLUP);
-  pinMode(DT, INPUT_PULLUP);
-  pinMode(SW, INPUT_PULLUP);
-  //for(int i=0; i!=NBR_SEQUENCES; i++){
-  //  tab_seq[i]=NULL;
-  //}
+
+  Serial.begin(9600);
 
   // Initialisation I2C sur Teensy (pins 18/19 par défaut)
   Wire.begin();
@@ -47,16 +49,37 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
-  fonctionnement=NORMAL;
   AudioMemory(10);
+
   sgtl5000_1.enable();
-  sgtl5000_1.volume(volume_courant);
+  sgtl5000_1.volume(0.8);
+
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
   mixer1.gain(2, 0.8);
   mixer1.gain(3, 0.8);
-  printf("a\n");
 
+  mixer2.gain(0, 0.8);
+  mixer2.gain(1, 0.8);
+  mixer2.gain(2, 0.8);
+  mixer2.gain(3, 0.8);
+
+  mixer3.gain(0, 0.8);
+  mixer3.gain(1, 0.8);
+  mixer3.gain(2, 0.8);
+  mixer3.gain(3, 0.8);
+
+  Serial.println("Audio ready");
+
+  for(int i=0; i!=7; i++){
+    pinMode(i, INPUT_PULLUP);
+  }
+  //jsp pk mais ca veut pas pr la 7
+  //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
+  pinMode(9, INPUT_PULLUP);
+  pinMode(CLK, INPUT_PULLUP);
+  pinMode(DT, INPUT_PULLUP);
+  pinMode(SW, INPUT_PULLUP);
 }
 #include <Encoder.h>
 
@@ -67,26 +90,14 @@ void setup() {
 Encoder myEnc(DT, CLK);
 long oldPosition  = -999;
 void loop() {
-  // Update all the button objects
-  bouton_haut.update();
-  bouton_bas.update();
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
-  //Serial.println(AudioMemoryUsageMax());
-  
+
   //affichage_normal();
   // Controle du volume en etat NORMAL
-  if (fonctionnement==NORMAL /*|| fonctionnement==LECTURE_SEQUENCE*/){
+  if (fonctionnement==NORMAL){
     affichage_normal();
-    if (bouton_haut.fallingEdge()){
-      augmenter_volume();
-      printf("je dois augmenter le volume\n");
-    }
-    if (bouton_bas.fallingEdge()){
-      baisser_volume();
-      printf("je dois baisser le volume\n");
-    }
   }
   
   if (fonctionnement==MENU){
@@ -107,40 +118,19 @@ void loop() {
     }
     //printf("%d\n", position_menu);
     affichage_menu(position_menu);
-    /*if (bouton_haut.fallingEdge()){
-      printf("haut\n");
-      position_menu=baisser_position(position_menu);
-      affichage_menu(position_menu);
-    }
-    if (bouton_bas.fallingEdge()){
-      position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
-      affichage_menu(position_menu);
-      printf("bas\n");
-    }*/
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
     affichage_enregistrement();
-    if (button0.fallingEdge()) {
+    /*if (button0.fallingEdge()) {
       tab_seq[position_menu]=ajouter_sequence(initia_sequence(0), tab_seq[position_menu]);
       printf("son bouton 1 seq\n");
-    }
-    if (button1.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(1), tab_seq[position_menu]);
-      printf("son bouton 2 seq\n");
-    }
-    if (button2.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(2), tab_seq[position_menu]);
-      printf("son bouton 3 seq\n");
+    }*/
+    for(int i=0; i!=NBR_BOUTONS_SON; i++){
+      if(tab_boutons_son[i].fallingEdge()){
+        tab_seq[position_menu]=ajouter_sequence(initia_sequence(i), tab_seq[position_menu]);
+      }
     }
   }
-
-  /*if(fonctionnement==LECTURE_SEQUENCE){
-    if(tab_seq[sequence_lue]!=NULL){
-      lire_sequence(tab_seq[sequence_lue]);
-      fonctionnement=NORMAL;
-    }
-  }*/
-
 
   if (bouton_sequence.fallingEdge()){
     if(fonctionnement==NORMAL){
@@ -153,6 +143,7 @@ void loop() {
     }
   }
   if(bouton_ok.fallingEdge()){
+    printf("ok...\n");
     if(fonctionnement==MENU){
       debut_attente=millis();
       while(digitalRead(SW)==LOW){
@@ -180,8 +171,6 @@ void loop() {
     }
   }
 
-  /*display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
-  display.print("GROUPE VOCODEUR\n");*/
   fonctionnement_sample();
   affichage_base();
   display.display();

@@ -18,7 +18,8 @@
 #include <Bounce.h>
 
 #define NBR_SEQUENCES 4
-#define NBR_BOUTONS 6
+#define NBR_BOUTONS 7
+#define NBR_BOUTONS_SON 7
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
