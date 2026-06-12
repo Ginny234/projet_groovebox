@@ -6,7 +6,7 @@
 // Part 2-3: Playing Samples
 
 // WAV files converted to code by wav2sketch
-
+#include <math.h>
 #include "src/struct.h"
 #include "src/var_global.h"
 #include "src/affichage.h"
@@ -58,11 +58,22 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
-float knob = (float)analogRead(A7) / 1023.0f;
+int somme = 0;
+for(int i = 0; i < 8; i++) {
+    somme += analogRead(A7);
+}
+
+float knob = (float)(somme / 8) / 1023.0f;
 float pitchRatio = powf(2.0f, knob * 3.0f - 1.5f);
+
 Serial.printf("Pitch: %.2f\n", pitchRatio);
-granular1.setSpeed(pitchRatio);
-  
+
+static float ancienPitch = 1.0f;
+
+if (fabs(pitchRatio - ancienPitch) > 0.02f) {
+    granular1.setSpeed(pitchRatio);
+    ancienPitch = pitchRatio;
+}
   //affichage_normal();
   fonctionnement_sample();
   // Controle du volume en etat NORMAL
