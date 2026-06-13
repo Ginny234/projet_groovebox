@@ -6,11 +6,9 @@ AudioRecordQueue   queue1;
 AudioPlaySdRaw     playRaw1;
 AudioOutputI2S     i2s_out;
 
-AudioConnection patchCord1(i2s_in, 0, queue1, 0);
-AudioConnection patchCord2(playRaw1, 0, i2s_out, 0);
-AudioConnection patchCord3(playRaw1, 0, i2s_out, 1);
-
-AudioControlSGTL5000 sgtl5000_1;
+AudioConnection patchCord_mic_1(i2s_in, 0, queue1, 0);
+AudioConnection patchCord_mic_2(playRaw1, 0, i2s_out, 0);
+AudioConnection patchCord_mic_3(playRaw1, 0, i2s_out, 1);
 
 // Button
 Bounce boutonRec = Bounce(PIN_BOUTON_REC, 15);

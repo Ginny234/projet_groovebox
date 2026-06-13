@@ -7,6 +7,7 @@
 #include <SD.h>
 #include <SerialFlash.h>
 #include <Bounce.h>
+#include "var_global.h"
 
 // Pin configuration
 #define PIN_BOUTON_REC 0
@@ -16,7 +17,6 @@ extern AudioInputI2S      i2s_in;
 extern AudioRecordQueue   queue1;
 extern AudioPlaySdRaw     playRaw1;
 extern AudioOutputI2S     i2s_out;
-extern AudioControlSGTL5000 sgtl5000_1;
 
 // Button
 extern Bounce boutonRec;
