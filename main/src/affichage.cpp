@@ -40,6 +40,7 @@ void affichage_normal(){
 }
 
 void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
+  //printf("AFFICHAGE BASE\n");
   char vol[10];
   sprintf(vol, "Vol:%d", (int)(volume_courant*100));
   //printf(vol);

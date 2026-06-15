@@ -76,13 +76,13 @@ void loop() {
 
     int val_min = 0;
     int val_max = 515;
-    float volume = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+    volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
 
-    sgtl5000_1.volume(volume);
+    sgtl5000_1.volume(volume_courant);
     Serial.print("brut A0 = ");
     Serial.print(val1);
     Serial.print("  ->  volume = ");
-    Serial.println(volume);
+    Serial.println(volume_courant);
   }
 
   //affichage_normal();
@@ -190,6 +190,5 @@ void loop() {
     }
   }*/
 
-  }
 }
 
