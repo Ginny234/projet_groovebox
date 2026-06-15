@@ -15,8 +15,16 @@
 #include "src/samples.h"
 #include "src/sequences.h"
 
+bool lit_sequence;
+int sequence_lue;
+unsigned long debut_attente;
+unsigned long fin_attente;
+
 void setup() {
-  Serial.begin(38400);
+  lit_sequence=false;
+  sequence_lue=-1;
+
+  Serial.begin(9600);
   for (int i=0; i!=NBR_BOUTONS; i++){
     pinMode(i, INPUT_PULLUP);
   }
@@ -79,26 +87,6 @@ void loop() {
 
   //affichage_normal();
   fonctionnement_sample();
-  // Controle du volume en etat NORMAL
-  if (fonctionnement==NORMAL){
-    if(playMem1.isPlaying() || playMem2.isPlaying() || playMem3.isPlaying()){
-      //affichage_sample(0);
-      display.setCursor(0, 0);
-      display.print("Sample jouée");
-      //display.display();
-      //delay(300);
-      printf("je deviens folle\n");
-    }
-    /*//affichage_normal();
-    if (bouton_haut.fallingEdge()){
-      augmenter_volume();
-      printf("je dois augmenter le volume");
-    }
-    if (bouton_bas.fallingEdge()){
-      baisser_volume();
-      printf("je dois baisser le volume");
-    }
-  }*/
   
   if (fonctionnement==MENU){
     affichage_menu(position_menu);
@@ -112,21 +100,10 @@ void loop() {
       affichage_menu(position_menu);
       printf("bas\n");
     }
-    //rising edge parce que si c'est pas l'inverse ça considérait qu'on appuyait sur le bouton 2 fois
-    if (bouton_ok.fallingEdge()){
-      if(tab_seq[position_menu]!=NULL){
-        printf("je suis censer lire  une sequence\n");
-        lire_sequence(tab_seq[position_menu]);
-      }
-      else{
-        fonctionnement=ENREGISTREMENT_SEQUENCE;
-        printf("fonct:%d\n",fonctionnement);
-        printf("enregistrement de sequence\n");
-      }
-    }
     //affichage_menu_sequences(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
+    affichage_enregistrement();
     if (button0.fallingEdge()) {
       tab_seq[position_menu]=ajouter_sequence(initia_sequence(0), tab_seq[position_menu]);
       printf("son bouton 1 seq\n");
@@ -139,13 +116,15 @@ void loop() {
       tab_seq[position_menu]=ajouter_sequence(initia_sequence(2), tab_seq[position_menu]);
       printf("son bouton 3 seq\n");
     }
-    if (bouton_ok.fallingEdge()){
-      printf("enregistrement terminé\n");
-      fonctionnement=NORMAL;
-    }
   }
 
-  fonctionnement_sample();
+  /*if(fonctionnement==LECTURE_SEQUENCE){
+    if(tab_seq[sequence_lue]!=NULL){
+      lire_sequence(tab_seq[sequence_lue]);
+      fonctionnement=NORMAL;
+    }
+  }*/
+
 
   if (bouton_sequence.fallingEdge()){
     if(fonctionnement==NORMAL){
@@ -157,10 +136,35 @@ void loop() {
       printf("bonjour je retourne au vide\n");
     }
   }
+  if(bouton_ok.fallingEdge()){
+    if(fonctionnement==MENU){
+      debut_attente=millis();
+      while(digitalRead(6)==LOW){
+        fin_attente=millis();
+      }
+      if(fin_attente-debut_attente>3000 || tab_seq[position_menu]==NULL){
+        fonctionnement=ENREGISTREMENT_SEQUENCE;
+        printf("fonct:%d\n",fonctionnement);
+        printf("enregistrement de sequence\n");
+      }
+      else if (tab_seq[position_menu]!=NULL){
+        printf("je suis censer lire  une sequence\n");
+        lire_sequence(tab_seq[position_menu]);
+      }
+    }
+    else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
+      printf("enregistrement terminé\n");
+      fonctionnement=NORMAL;
+    }
+    if(fonctionnement==LECTURE_SEQUENCE){
+      fonctionnement=NORMAL;
+      sequence_lue=-1;
+    }
+  }
 
-  display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
-  display.print("GROUPE VOCODEUR\n");
-  //affichage_base();
+  /*display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
+  display.print("GROUPE VOCODEUR\n");*/
+  affichage_base();
   display.display();
 
   /*int knob = analogRead(A3);
