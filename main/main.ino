@@ -63,20 +63,30 @@ void loop() {
   bouton_sequence.update();
   display.clearDisplay();
   
+  static long somme = 0;
+  static int nb_lectures = 0;
+
+  somme += analogRead(A0);
+  nb_lectures++;
+
+  if (nb_lectures >= 64) {  // 64 au lieu de 16
+    int val1 = somme / 64;
+    somme = 0;
+    nb_lectures = 0;
+
+    int val_min = 0;
+    int val_max = 515;
+    float volume = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+
+    sgtl5000_1.volume(volume);
+    Serial.print("brut A0 = ");
+    Serial.print(val1);
+    Serial.print("  ->  volume = ");
+    Serial.println(volume);
+  }
+
   //affichage_normal();
   fonctionnement_sample();
-  // Controle du volume en etat NORMAL
-  if (fonctionnement==NORMAL /*|| fonctionnement==LECTURE_SEQUENCE*/){
-    affichage_normal();
-    if (bouton_haut.fallingEdge()){
-      augmenter_volume();
-      printf("je dois augmenter le volume\n");
-    }
-    if (bouton_bas.fallingEdge()){
-      baisser_volume();
-      printf("je dois baisser le volume\n");
-    }
-  }
   
   if (fonctionnement==MENU){
     affichage_menu(position_menu);
@@ -180,6 +190,6 @@ void loop() {
     }
   }*/
 
-
+  }
 }
 
