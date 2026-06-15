@@ -34,4 +34,6 @@ etat fonctionnement;
 int position_menu=0;
 sequence* tab_seq[NBR_SEQUENCES];
 float volume_courant=1.0f;  // Volume initial entre 0 et 1
+float pitch_courant = 1.0f;
+int pitch_brut_courant = 0;
 int16_t granularMemory[GRANULAR_MEMORY_SIZE];

@@ -37,6 +37,8 @@ extern etat fonctionnement;
 extern int position_menu;
 extern sequence* tab_seq[NBR_SEQUENCES];
 extern float volume_courant;  // Volume initial entre 0 et 1
+extern float pitch_courant;
+extern int pitch_brut_courant;
 
 #define GRANULAR_MEMORY_SIZE 24000
 extern int16_t granularMemory[GRANULAR_MEMORY_SIZE];

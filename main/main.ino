@@ -42,12 +42,13 @@ void setup() {
   AudioMemory(20);
   sgtl5000_1.enable();
   sgtl5000_1.volume(volume_courant);
-  mixer1.gain(0, 0.8);
-  mixer1.gain(1, 0.8);
-  mixer1.gain(2, 0.8);
-  mixer1.gain(3, 0.8);
+  mixer1.gain(0, 0.3);
+  mixer1.gain(1, 0.3);
+  mixer1.gain(2, 0.3);
+  mixer1.gain(3, 0.3);
   granular1.begin(granularMemory, GRANULAR_MEMORY_SIZE);
-  granular1.beginPitchShift(30.0f);
+  granular1.beginPitchShift(20.0f);
+  Serial.println("Pitch monitoring started");
   printf("a\n");
 }
 
@@ -58,22 +59,28 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
-int somme = 0;
-for(int i = 0; i < 8; i++) {
-    somme += analogRead(A7);
-}
 
-float knob = (float)(somme / 8) / 1023.0f;
-float pitchRatio = powf(2.0f, knob * 3.0f - 1.5f);
+// Lecture lissée du potentiomètre de pitch
+static float smoothedKnob = 0.5f;
+int valeurA7 = analogRead(A7);
+smoothedKnob = 0.15f * ((float)valeurA7 / 1023.0f) + 0.85f * smoothedKnob;
 
-Serial.printf("Pitch: %.2f\n", pitchRatio);
+// Pitch beaucoup plus marqué : 0.25x -> 4.0x
+float pitchRatio = powf(2.0f, smoothedKnob * 4.0f - 2.0f);
+pitch_courant = pitchRatio; // On l'enregistre pour l'afficher plus tard
+pitch_brut_courant = valeurA7;
 
+// Mise à jour uniquement si changement notable (et on évite le delay)
 static float ancienPitch = 1.0f;
-
-if (fabs(pitchRatio - ancienPitch) > 0.02f) {
+if (fabs(pitchRatio - ancienPitch) > 0.01f) {
     granular1.setSpeed(pitchRatio);
     ancienPitch = pitchRatio;
+  Serial.print("A7=");
+  Serial.print(valeurA7);
+  Serial.print(" Pitch=");
+  Serial.println(pitchRatio, 2);
 }
+
   //affichage_normal();
   fonctionnement_sample();
   // Controle du volume en etat NORMAL

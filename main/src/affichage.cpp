@@ -41,14 +41,25 @@ void affichage_normal(){
 void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
   char vol[10];
   sprintf(vol, "Vol:%d", (int)(volume_courant*100));
-  //printf(vol);
 
-  //display.setCursor(0, SCREEN_WIDTH-strlen(vol)*10-3);
-
-  //display.print(vol);
   display.setCursor(SCREEN_WIDTH/2-strlen("Groupe Vocodeur")*11/4, SCREEN_HEIGHT-8);
   display.print("Groupe Vocodeur\n");
+  
   display.setCursor(SCREEN_WIDTH-strlen(vol)*6, 0);
   display.print(vol);
+  
+  // Affichage du Pitch
+  char pitch_str[20];
+  sprintf(pitch_str, "Pitch: %.2f", pitch_courant);
+  display.setTextSize(2);
+  display.setCursor(0, 12);
+  display.print(pitch_str);
+  display.setTextSize(1);
+
+  char adc_str[16];
+  sprintf(adc_str, "A7:%d", pitch_brut_courant);
+  display.setCursor(0, 40);
+  display.print(adc_str);
+
   display.display();
 }
