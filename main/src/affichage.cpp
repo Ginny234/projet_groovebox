@@ -37,6 +37,18 @@ void affichage_normal(){
     if(playMem3.isPlaying()){
     affichage_sample(2);
   }
+  if(playMem4.isPlaying()){
+    affichage_sample(3);
+  }
+  if(playMem5.isPlaying()){
+    affichage_sample(4);
+  }
+  if(playMem6.isPlaying()){
+    affichage_sample(5);
+  }
+  if(playMem7.isPlaying()){
+    affichage_sample(6);
+  }
 }
 
 void affichage_base(){//tous menus compris, afficher absolument TOUT le temps

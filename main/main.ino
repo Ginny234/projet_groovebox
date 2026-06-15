@@ -95,11 +95,6 @@ void loop() {
   display.clearDisplay();
 
   //affichage_normal();
-  // Controle du volume en etat NORMAL
-  if (fonctionnement==NORMAL){
-    affichage_normal();
-  }
-  
   if (fonctionnement==MENU){
 
     long newPosition = myEnc.read();
@@ -172,6 +167,7 @@ void loop() {
   }
 
   fonctionnement_sample();
+  affichage_normal();//affichage des samples quand elles sont jouées
   affichage_base();
   display.display();
 
