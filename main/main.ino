@@ -55,23 +55,27 @@ void loop() {
   bouton_sequence.update();
   display.clearDisplay();
   
-  long somme = 0;
-  for (int i = 0; i < 16; i++) {
-    somme += analogRead(A0);
-    delay(50);
+  static long somme = 0;
+  static int nb_lectures = 0;
+
+  somme += analogRead(A0);
+  nb_lectures++;
+
+  if (nb_lectures >= 64) {  // 64 au lieu de 16
+    int val1 = somme / 64;
+    somme = 0;
+    nb_lectures = 0;
+
+    int val_min = 0;
+    int val_max = 515;
+    float volume = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+
+    sgtl5000_1.volume(volume);
+    Serial.print("brut A0 = ");
+    Serial.print(val1);
+    Serial.print("  ->  volume = ");
+    Serial.println(volume);
   }
-  int val1 = somme / 16;
-  int val_min = 0;
-  int val_max = 515;
-  float volume = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
-  
-  Serial.print("brut A0 = ");
-  Serial.print(val1);
-  Serial.print("  ->  volume = ");
-  Serial.println(volume);
-  
-  sgtl5000_1.volume(volume);
-  delay(50);
 
   //affichage_normal();
   fonctionnement_sample();
