@@ -6,5 +6,6 @@
 
 void lire_sample(int id);
 void fonctionnement_sample();
+void lire_sample_sequence(int id);
 
 #endif

@@ -22,14 +22,13 @@ int sequence_lue;
 void setup() {
   lit_sequence=false;
   sequence_lue=-1;
+  volume_courant=1.0f;
+
+  for(int i=0; i!=NBR_SEQUENCES; i++){
+    tab_seq[i]=NULL;
+  }
 
   Serial.begin(9600);
-  for (int i=0; i!=NBR_BOUTONS; i++){
-    pinMode(i, INPUT_PULLUP);
-  }
-  //for(int i=0; i!=NBR_SEQUENCES; i++){
-  //  tab_seq[i]=NULL;
-  //}
 
   // Initialisation I2C sur Teensy (pins 18/19 par défaut)
   Wire.begin();
@@ -39,83 +38,128 @@ void setup() {
     while (1);
   }
 
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("Erreur SD");
+    while (1);
+  }
+  
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
-  fonctionnement=NORMAL;
-  AudioMemory(10);
+  AudioMemory(30);
+
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("Erreur SD");
+    while (1);
+  }
+
   sgtl5000_1.enable();
-  sgtl5000_1.volume(volume_courant);
+  sgtl5000_1.volume(0.8);
+
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
   mixer1.gain(2, 0.8);
   mixer1.gain(3, 0.8);
   printf("a\n");
   setupMicrophone();
-}
 
+  mixer2.gain(0, 0.8);
+  mixer2.gain(1, 0.8);
+  mixer2.gain(2, 0.8);
+  mixer2.gain(3, 0.8);
+
+  mixer3.gain(0, 0.8);
+  mixer3.gain(1, 0.8);
+  mixer3.gain(2, 0.8);
+  mixer3.gain(3, 0.8);
+
+  mixer4.gain(0, 0.8);
+  mixer4.gain(1, 0.8);
+  mixer4.gain(2, 0.8);
+  mixer4.gain(3, 0.8);
+  
+  mixer5.gain(0, 0.8);
+  mixer5.gain(1, 0.8);
+  mixer5.gain(2, 0.8);
+  mixer5.gain(3, 0.8);
+  
+  mixer6.gain(0, 0.8);
+  mixer6.gain(1, 0.8);
+  mixer6.gain(2, 0.8);
+  mixer6.gain(3, 0.8);
+
+  mixer7.gain(0, 0.8);
+  mixer7.gain(1, 0.8);
+  mixer7.gain(2, 0.8);
+  mixer7.gain(3, 0.8);
+
+  Serial.println("Audio ready");
+
+  for(int i=0; i!=7; i++){
+    pinMode(i, INPUT_PULLUP);
+  }
+  //jsp pk mais ca veut pas pr la 7
+  //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
+  pinMode(9, INPUT_PULLUP);
+  pinMode(CLK, INPUT_PULLUP);
+  pinMode(DT, INPUT_PULLUP);
+  pinMode(SW, INPUT_PULLUP);
+}
+#include <Encoder.h>
+
+// Change these two numbers to the pins connected to your encoder.
+//   Best Performance: both pins have interrupt capability
+//   Good Performance: only the first pin has interrupt capability
+//   Low Performance:  neither pin has interrupt capability
+Encoder myEnc(DT, CLK);
+long oldPosition  = -999;
 void loop() {
-  // Update all the button objects
-  bouton_haut.update();
-  bouton_bas.update();
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
   updateMicrophone();
   
+  /*static long somme = 0;
+  static int nb_lectures = 0;
+
+  somme += analogRead(A0);
+  nb_lectures++;
+
+  if (nb_lectures >= 64) {  // 64 au lieu de 16
+    int val1 = somme / 64;
+    somme = 0;
+    nb_lectures = 0;
+
+    int val_min = 0;
+    int val_max = 515;
+    volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+
+    sgtl5000_1.volume(volume_courant);
+    Serial.print("brut A0 = ");
+    Serial.print(val1);
+    Serial.print("  ->  volume = ");
+    Serial.println(volume_courant);
+  }*/
+
   //affichage_normal();
   fonctionnement_sample();
-  // Controle du volume en etat NORMAL
-  if (fonctionnement==NORMAL /*|| fonctionnement==LECTURE_SEQUENCE*/){
-    affichage_normal();
-    if (bouton_haut.fallingEdge()){
-      augmenter_volume();
-      printf("je dois augmenter le volume\n");
-    }
-    if (bouton_bas.fallingEdge()){
-      baisser_volume();
-      printf("je dois baisser le volume\n");
-    }
-  }
   
   if (fonctionnement==MENU){
     affichage_menu(position_menu);
-    if (bouton_haut.fallingEdge()){
-      printf("haut\n");
-      position_menu=baisser_position(position_menu);
-      affichage_menu(position_menu);
-    }
-    if (bouton_bas.fallingEdge()){
-      position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
-      affichage_menu(position_menu);
-      printf("bas\n");
-    }
-    //affichage_menu_sequences(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
     affichage_enregistrement();
-    if (button0.fallingEdge()) {
+    /*if (button0.fallingEdge()) {
       tab_seq[position_menu]=ajouter_sequence(initia_sequence(0), tab_seq[position_menu]);
       printf("son bouton 1 seq\n");
-    }
-    if (button1.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(1), tab_seq[position_menu]);
-      printf("son bouton 2 seq\n");
-    }
-    if (button2.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(2), tab_seq[position_menu]);
-      printf("son bouton 3 seq\n");
+    }*/
+    for(int i=0; i!=NBR_BOUTONS_SON; i++){
+      if(tab_boutons_son[i].fallingEdge()){
+        tab_seq[position_menu]=ajouter_sequence(initia_sequence(i), tab_seq[position_menu]);
+      }
     }
   }
-
-  /*if(fonctionnement==LECTURE_SEQUENCE){
-    if(tab_seq[sequence_lue]!=NULL){
-      lire_sequence(tab_seq[sequence_lue]);
-      fonctionnement=NORMAL;
-    }
-  }*/
-
 
   if (bouton_sequence.fallingEdge()){
     if(fonctionnement==NORMAL){
@@ -128,12 +172,14 @@ void loop() {
     }
   }
   if(bouton_ok.fallingEdge()){
+    printf("ok...\n");
     if(fonctionnement==MENU){
       debut_attente=millis();
-      while(digitalRead(6)==LOW){
+      while(digitalRead(SW)==LOW){
         fin_attente=millis();
       }
       if(fin_attente-debut_attente>3000 || tab_seq[position_menu]==NULL){
+        tab_seq[position_menu]=NULL;
         fonctionnement=ENREGISTREMENT_SEQUENCE;
         printf("fonct:%d\n",fonctionnement);
         printf("enregistrement de sequence\n");
@@ -142,6 +188,7 @@ void loop() {
         printf("je suis censer lire  une sequence\n");
         lire_sequence(tab_seq[position_menu]);
       }
+      printf("debut:%d, fin:%d\n",debut_attente, fin_attente);
     }
     else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
       printf("enregistrement terminé\n");
@@ -153,8 +200,8 @@ void loop() {
     }
   }
 
-  /*display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
-  display.print("GROUPE VOCODEUR\n");*/
+  fonctionnement_sample();
+  affichage_normal();//affichage des samples quand elles sont jouées
   affichage_base();
   display.display();
 
@@ -180,7 +227,6 @@ void loop() {
       playMem3.play(AudioSampleCashregister);
     }
   }*/
-
 
 }
 
