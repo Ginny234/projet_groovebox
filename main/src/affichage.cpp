@@ -28,25 +28,25 @@ void affichage_sample(int id_sample){
 }
 
 void affichage_normal(){
-  if(playMem1.isPlaying()){
+  if(playSdWav1.isPlaying()){
     affichage_sample(0);
   }
-  if(playMem2.isPlaying()){
+  if(playSdWav2.isPlaying()){
     affichage_sample(1);
   }
-    if(playMem3.isPlaying()){
+    if(playSdWav3.isPlaying()){
     affichage_sample(2);
   }
-  if(playMem4.isPlaying()){
+  if(playSdWav4.isPlaying()){
     affichage_sample(3);
   }
-  if(playMem5.isPlaying()){
+  if(playSdWav5.isPlaying()){
     affichage_sample(4);
   }
-  if(playMem6.isPlaying()){
+  if(playSdWav6.isPlaying()){
     affichage_sample(5);
   }
-  if(playMem7.isPlaying()){
+  if(playSdWav7.isPlaying()){
     affichage_sample(6);
   }
 }

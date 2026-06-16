@@ -45,11 +45,21 @@ void setup() {
     while (1);
   }
 
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("Erreur SD");
+    while (1);
+  }
+  
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
-  AudioMemory(10);
+  AudioMemory(30);
+
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("Erreur SD");
+    while (1);
+  }
 
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.8);
@@ -68,6 +78,26 @@ void setup() {
   mixer3.gain(1, 0.8);
   mixer3.gain(2, 0.8);
   mixer3.gain(3, 0.8);
+
+  mixer4.gain(0, 0.8);
+  mixer4.gain(1, 0.8);
+  mixer4.gain(2, 0.8);
+  mixer4.gain(3, 0.8);
+  
+  mixer5.gain(0, 0.8);
+  mixer5.gain(1, 0.8);
+  mixer5.gain(2, 0.8);
+  mixer5.gain(3, 0.8);
+  
+  mixer6.gain(0, 0.8);
+  mixer6.gain(1, 0.8);
+  mixer6.gain(2, 0.8);
+  mixer6.gain(3, 0.8);
+
+  mixer7.gain(0, 0.8);
+  mixer7.gain(1, 0.8);
+  mixer7.gain(2, 0.8);
+  mixer7.gain(3, 0.8);
 
   Serial.println("Audio ready");
 
