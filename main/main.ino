@@ -37,19 +37,19 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
 
   analogReadResolution(10);
+  analogReadAveraging(16);
 
   fonctionnement=NORMAL;
   AudioMemory(20);
   sgtl5000_1.enable();
   sgtl5000_1.volume(volume_courant);
-  mixer1.gain(0, 0.3);
-  mixer1.gain(1, 0.3);
-  mixer1.gain(2, 0.3);
-  mixer1.gain(3, 0.3);
+  mixer1.gain(0, 0.18);
+  mixer1.gain(1, 0.18);
+  mixer1.gain(2, 0.18);
+  mixer1.gain(3, 0.18);
   granular1.begin(granularMemory, GRANULAR_MEMORY_SIZE);
-  granular1.beginPitchShift(20.0f);
+  granular1.beginPitchShift(12.0f);
   Serial.println("Pitch monitoring started");
-  printf("a\n");
 }
 
 void loop() {
@@ -60,19 +60,52 @@ void loop() {
   bouton_sequence.update();
   display.clearDisplay();
 
-// Lecture lissée du potentiomètre de pitch
-static float smoothedKnob = 0.5f;
-int valeurA7 = analogRead(A7);
-smoothedKnob = 0.15f * ((float)valeurA7 / 1023.0f) + 0.85f * smoothedKnob;
+// =========================
+// POTENTIOMÈTRE + LISSAGE
+// =========================
+long somme = 0;
+for (int i = 0; i < 16; i++) {
+  somme += analogRead(A7);
+}
 
-// Pitch beaucoup plus marqué : 0.25x -> 4.0x
-float pitchRatio = powf(2.0f, smoothedKnob * 4.0f - 2.0f);
+int valeurA7 = somme / 16;
+
+static float smoothedKnob = 0.5f;
+float knob = (float)valeurA7 / 1023.0f;
+
+// inversion sens (gauche = grave, droite = aigu)
+knob = 1.0f - knob;
+
+smoothedKnob = 0.25f * knob + 0.75f * smoothedKnob;
+
+// =========================
+// PITCH STEPS
+// =========================
+const float pitchSteps[] = {0.35f, 0.55f, 0.80f, 1.20f, 1.80f, 2.80f};
+const int pitchStepCount = sizeof(pitchSteps) / sizeof(pitchSteps[0]);
+int pitchIndex = (int)(smoothedKnob * (pitchStepCount - 1) + 0.5f);
+if (pitchIndex < 0) pitchIndex = 0;
+if (pitchIndex >= pitchStepCount) pitchIndex = pitchStepCount - 1;
+float pitchRatio = pitchSteps[pitchIndex];
+
+// =========================
+// SOLUTION 3 (ANTI SATURATION)
+// =========================
+if (pitchRatio < 0.6f) {
+  pitchRatio = 0.6f;
+}
+
+if (pitchRatio > 1.6f) {
+  pitchRatio = 1.6f;
+}
 pitch_courant = pitchRatio; // On l'enregistre pour l'afficher plus tard
 pitch_brut_courant = valeurA7;
 
-// Mise à jour uniquement si changement notable (et on évite le delay)
-static float ancienPitch = 1.0f;
-if (fabs(pitchRatio - ancienPitch) > 0.01f) {
+// =========================
+// UPDATE AUDIO
+// =========================
+static float ancienPitch = -1.0f;
+if (pitchRatio != ancienPitch) {
     granular1.setSpeed(pitchRatio);
     ancienPitch = pitchRatio;
   Serial.print("A7=");
