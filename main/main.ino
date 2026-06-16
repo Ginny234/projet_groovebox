@@ -14,18 +14,10 @@
 #include "src/modifs_son.h"
 #include "src/samples.h"
 #include "src/sequences.h"
-
-#include <Audio.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <SD.h>
-#include <SerialFlash.h>
-
-
+#include "src/microphone.h"
+//commentaire test
 bool lit_sequence;
 int sequence_lue;
-unsigned long debut_attente;
-unsigned long fin_attente;
 
 void setup() {
   lit_sequence=false;
@@ -69,6 +61,8 @@ void setup() {
   mixer1.gain(1, 0.8);
   mixer1.gain(2, 0.8);
   mixer1.gain(3, 0.8);
+  printf("a\n");
+  setupMicrophone();
 
   mixer2.gain(0, 0.8);
   mixer2.gain(1, 0.8);
@@ -124,8 +118,7 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   display.clearDisplay();
-
-  //affichage_normal();
+  updateMicrophone();
   
   /*static long somme = 0;
   static int nb_lectures = 0;
