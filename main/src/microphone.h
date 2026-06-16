@@ -9,9 +9,6 @@
 #include <Bounce.h>
 #include "var_global.h"
 
-// Pin configuration
-#define PIN_BOUTON_REC 0
-
 // Audio objects
 extern AudioInputI2S      i2s_in;
 extern AudioRecordQueue   queue1;

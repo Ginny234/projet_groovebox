@@ -18,8 +18,6 @@
 //commentaire test
 bool lit_sequence;
 int sequence_lue;
-unsigned long debut_attente;
-unsigned long fin_attente;
 
 void setup() {
   lit_sequence=false;

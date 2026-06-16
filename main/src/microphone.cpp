@@ -77,15 +77,15 @@ void arreterEnregistrementEtLire() {
 
   Serial.println("Enregistrement termine");
 
-  File f = SD.open("REC.RAW");
+  /*File f = SD.open("REC.RAW");
   Serial.print("Taille fichier = ");
   Serial.println(f.size());
   f.close();
 
-  delay(1000);
+  delay(1000);*/
 
-  Serial.println("Lecture...");
-  playRaw1.play("REC.RAW");
+  /*Serial.println("Lecture...");
+  playRaw1.play("REC.RAW");*/
 }
 
 void updateMicrophone() {
@@ -99,6 +99,10 @@ void updateMicrophone() {
   }
 
   if (boutonRec.risingEdge()) {
+    if(millis()-appuiDebut<3000){
+      printf("je lis un truc\n");
+      playRaw1.play("REC.RAW");
+    }
     boutonEnfonce = false;
     appuiLongDejaDeclenche = false;
     Serial.println("Bouton relache");
@@ -119,3 +123,4 @@ void updateMicrophone() {
     queue1.freeBuffer();
   }
 }
+

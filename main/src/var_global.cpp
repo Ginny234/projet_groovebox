@@ -33,3 +33,5 @@ etat fonctionnement;
 int position_menu=0;
 sequence* tab_seq[NBR_SEQUENCES];
 float volume_courant=1.0f;  // Volume initial entre 0 et 1
+unsigned long debut_attente;
+unsigned long fin_attente;

@@ -35,4 +35,6 @@ extern etat fonctionnement;
 extern int position_menu;
 extern sequence* tab_seq[NBR_SEQUENCES];
 extern float volume_courant;  // Volume initial entre 0 et 1
+extern unsigned long debut_attente;
+extern unsigned long fin_attente;
 #endif
