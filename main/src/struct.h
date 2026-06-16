@@ -19,6 +19,12 @@
 
 #define NBR_SEQUENCES 4
 #define NBR_BOUTONS 7
+#define NBR_BOUTONS_SON 7
+
+#define SDCARD_CS_PIN    10
+#define SDCARD_MOSI_PIN  11   // Teensy 4 ignores this, uses pin 11
+#define SDCARD_SCK_PIN   13  // Teensy 4 ignores this, uses pin 13
+
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -29,6 +35,10 @@
 #define VOLUME_STEP 0.05f
 
 #define OLED_RESET -1
+
+#define CLK 34
+#define DT 33
+#define SW 35
 
 typedef enum {
   MENU,

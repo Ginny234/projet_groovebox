@@ -1,33 +1,47 @@
 #include "samples.h"
 void lire_sample(int id){
+  printf("id du son qui se lance:%d\n", id);
   switch(id){
     case 0:
-      playMem1.play(AudioSampleSnare);
+      playSdWav1.play("SnareDrum.WAV");
       break;
     case 1:
-      playMem2.play(AudioSampleTomtom);
+      playSdWav2.play("Hihat.WAV");
       break;
     case 2:
-      playMem3.play(AudioSampleHihat);
+      playSdWav3.play("TomTom.WAV");
+      break;
+    case 3:
+      playSdWav4.play("Cymbal.WAV");
+      break;
+    case 4:
+      playSdWav5.play("Gong.WAV");
+      break;
+    case 5:
+      playSdWav6.play("Misc.WAV");
+      break;
+    case 6:
+      playSdWav7.play("CashRegister.WAV");
+    default:
       break;
   }
 }
 
-void fonctionnement_sample(){
-  button0.update();
-  button1.update();
-  button2.update();
+void lire_sample_sequence(int id){
+  char* nom_fichier[NBR_BOUTONS_SON]={"SnareDrum.WAV","Hihat.WAV", "TomTom.WAV", "Cymbal.WAV", "Gong.WAV", "Misc.WAV", "CashRegister.WAV"};
+  for(int i=0; i!=NBR_BOUTONS_SON; i++){
+    if(i==id){
+      playSdWav8.play(nom_fichier[i]);
+    }
+  }
+}
 
-  if (button0.fallingEdge()) {
-    printf("son bouton 1\n");
-    lire_sample(0);
-  }
-  if (button1.fallingEdge()) {
-    printf("son bouton 2\n");
-    lire_sample(1);
-  }
-  if (button2.fallingEdge()) {
-    printf("son bouton 3\n");
-    lire_sample(2);
+void fonctionnement_sample(){
+  for(int i=0; i!=NBR_BOUTONS_SON;i++){
+    tab_boutons_son[i].update();
+    if(tab_boutons_son[i].fallingEdge()){
+      lire_sample(i);
+      printf("t'as appuye sur un bouton, %d\n", i);
+    }
   }
 }
