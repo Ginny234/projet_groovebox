@@ -20,6 +20,14 @@ int sequence_lue;
 unsigned long debut_attente;
 unsigned long fin_attente;
 
+AudioSynthWaveformSine sine1;
+AudioOutputI2S i2s_out;
+
+AudioConnection patchCord1(sine1, 0, i2s_out, 0);
+AudioConnection patchCord2(sine1, 0, i2s_out, 1);
+
+AudioControlSGTL5000 sgtl5000_1;
+
 void setup() {
   lit_sequence=false;
   sequence_lue=-1;
