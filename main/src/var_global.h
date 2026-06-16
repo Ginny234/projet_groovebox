@@ -10,6 +10,12 @@
 #include <SD.h>
 #include <SerialFlash.h>
 
+extern AudioInputI2S      i2s_in;
+extern AudioRecordQueue   queue1;
+extern AudioPlaySdRaw     playRaw1;
+extern AudioOutputI2S     i2s_out;
+
+
 // GUItool: begin automatically generated code
 extern AudioPlaySdWav           playSdWav7; //xy=236.3333511352539,281.66666889190674
 extern AudioPlaySdWav           playSdWav8; //xy=254.3333511352539,324.6666851043701
@@ -73,6 +79,7 @@ extern Bounce button6;
 extern Bounce bouton_sequence;
 extern Bounce bouton_ok;
 extern Bounce tab_boutons_son[NBR_BOUTONS_SON];
+extern Bounce boutonRec;
 
 //autres variables
 extern etat fonctionnement;

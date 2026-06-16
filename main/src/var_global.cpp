@@ -8,6 +8,15 @@
 #include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
+AudioInputI2S      i2s_in;
+AudioRecordQueue   queue1;
+AudioPlaySdRaw     playRaw1;
+AudioOutputI2S     i2s_out;
+
+AudioConnection patchCord_mic_1(i2s_in, 0, queue1, 0);
+AudioConnection patchCord_mic_2(playRaw1, 0, i2s_out, 0);
+AudioConnection patchCord_mic_3(playRaw1, 0, i2s_out, 1);
+
 AudioPlaySdWav           playSdWav7; //xy=236.3333511352539,281.66666889190674
 AudioPlaySdWav           playSdWav8; //xy=254.3333511352539,324.6666851043701
 AudioPlaySdWav           playSdWav4; //xy=317.33333587646484,450.6666650772095
@@ -60,6 +69,7 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=958.3333282470703,392.333300590515
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+
 // Bounce objects to read pushbuttons 
 Bounce button0 = Bounce(0, 15);
 Bounce button1 = Bounce(1, 15);  // 15 ms debounce time
@@ -71,6 +81,7 @@ Bounce button6 = Bounce(6, 15);
 Bounce bouton_sequence = Bounce(9, 15);
 Bounce bouton_ok = Bounce(SW, 15);
 Bounce tab_boutons_son[NBR_BOUTONS_SON]={button0, button1, button2, button3, button4, button5, button6};
+Bounce boutonRec = Bounce(PIN_BOUTON_REC, 15);
 
 //autres variables
 etat fonctionnement;

@@ -9,15 +9,6 @@
 #include <Bounce.h>
 #include "var_global.h"
 
-// Audio objects
-extern AudioInputI2S      i2s_in;
-extern AudioRecordQueue   queue1;
-extern AudioPlaySdRaw     playRaw1;
-extern AudioOutputI2S     i2s_out;
-
-// Button
-extern Bounce boutonRec;
-
 // State variables
 extern bool recording;
 extern bool boutonEnfonce;

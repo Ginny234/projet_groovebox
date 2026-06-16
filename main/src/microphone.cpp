@@ -1,18 +1,5 @@
 #include "microphone.h"
 
-// Audio objects
-AudioInputI2S      i2s_in;
-AudioRecordQueue   queue1;
-AudioPlaySdRaw     playRaw1;
-AudioOutputI2S     i2s_out;
-
-AudioConnection patchCord_mic_1(i2s_in, 0, queue1, 0);
-AudioConnection patchCord_mic_2(playRaw1, 0, i2s_out, 0);
-AudioConnection patchCord_mic_3(playRaw1, 0, i2s_out, 1);
-
-// Button
-Bounce boutonRec = Bounce(PIN_BOUTON_REC, 15);
-
 // State variables
 bool recording = false;
 bool boutonEnfonce = false;
@@ -27,8 +14,6 @@ unsigned long appuiDebut = 0;
 
 void setupMicrophone() {
   pinMode(PIN_BOUTON_REC, INPUT_PULLUP);
-
-  AudioMemory(60);
 
   sgtl5000_1.enable();
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
