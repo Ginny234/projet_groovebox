@@ -125,23 +125,33 @@ void loop() {
   display.clearDisplay();
 
   //affichage_normal();
-  if (fonctionnement==MENU){
+  
+  static long somme = 0;
+  static int nb_lectures = 0;
 
-    long newPosition = myEnc.read();
-    if (newPosition != oldPosition) {
-      //Serial.println(newPosition);
-      printf("avant:%d, après:%d\n", newPosition, oldPosition);
-      if(newPosition<oldPosition){
-        position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
-        //printf("haut\n");
-      }
-      else{
-        position_menu=baisser_position(position_menu);
-        //printf("bas\n");
-      }
-      oldPosition = newPosition;
-    }
-    //printf("%d\n", position_menu);
+  somme += analogRead(A0);
+  nb_lectures++;
+
+  if (nb_lectures >= 64) {  // 64 au lieu de 16
+    int val1 = somme / 64;
+    somme = 0;
+    nb_lectures = 0;
+
+    int val_min = 0;
+    int val_max = 515;
+    volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+
+    sgtl5000_1.volume(volume_courant);
+    Serial.print("brut A0 = ");
+    Serial.print(val1);
+    Serial.print("  ->  volume = ");
+    Serial.println(volume_courant);
+  }
+
+  //affichage_normal();
+  fonctionnement_sample();
+  
+  if (fonctionnement==MENU){
     affichage_menu(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
@@ -223,7 +233,6 @@ void loop() {
       playMem3.play(AudioSampleCashregister);
     }
   }*/
-
 
 }
 

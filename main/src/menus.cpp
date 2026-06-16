@@ -2,7 +2,6 @@
 
 int baisser_position(int position){
   if (position--<=0){
-    //printf("bah non\n");
     return 0;
   }
   return position--;
@@ -11,7 +10,6 @@ int baisser_position(int position){
 int monter_position(int position, int max){
   if (position++>=max){
     return max;
-    //printf("max\n");
   }
   return position++;
 }
