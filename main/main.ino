@@ -123,7 +123,7 @@ void loop() {
   /*static long somme = 0;
   static int nb_lectures = 0;
 
-  somme += analogRead(A0);
+  somme += analogRead(A1);
   nb_lectures++;
 
   if (nb_lectures >= 64) {  // 64 au lieu de 16
@@ -132,11 +132,11 @@ void loop() {
     nb_lectures = 0;
 
     int val_min = 0;
-    int val_max = 515;
+    int val_max = 1023;
     volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
 
     sgtl5000_1.volume(volume_courant);
-    Serial.print("brut A0 = ");
+    Serial.print("brut A1 = ");
     Serial.print(val1);
     Serial.print("  ->  volume = ");
     Serial.println(volume_courant);
