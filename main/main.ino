@@ -30,6 +30,7 @@ unsigned long fin_attente;
 void setup() {
   lit_sequence=false;
   sequence_lue=-1;
+  volume_courant=1.0f;
 
   for(int i=0; i!=NBR_SEQUENCES; i++){
     tab_seq[i]=NULL;
@@ -126,7 +127,7 @@ void loop() {
 
   //affichage_normal();
   
-  static long somme = 0;
+  /*static long somme = 0;
   static int nb_lectures = 0;
 
   somme += analogRead(A0);
@@ -146,7 +147,7 @@ void loop() {
     Serial.print(val1);
     Serial.print("  ->  volume = ");
     Serial.println(volume_courant);
-  }
+  }*/
 
   //affichage_normal();
   fonctionnement_sample();
