@@ -31,8 +31,10 @@ extern AudioMixer4              mixer4; //xy=616.3333740234375,385.6666870117187
 extern AudioMixer4              mixer3;         //xy=622.3333511352539,282.3333320617676
 extern AudioMixer4              mixer6; //xy=765.6666679382324,413.33333015441895
 extern AudioMixer4              mixer5; //xy=783.6666030883789,219.33332061767578
-extern AudioMixer4              mixer7; //xy=866.6666641235352,322.33333015441895
-extern AudioOutputI2S           i2s1;           //xy=1041.3333587646484,321.33330154418945
+extern AudioMixer4              mixer7; //xy=863.6666793823242,317.3333396911621
+extern AudioEffectReverb        reverb1;        //xy=977.1429748535156,206.19048309326172
+extern AudioMixer4              mixer8; //xy=1104.6666564941406,272.333309173584
+extern AudioOutputI2S           i2s1;           //xy=1283.6666946411133,272.33333587646484
 extern AudioConnection          patchCord1;
 extern AudioConnection          patchCord2;
 extern AudioConnection          patchCord3;
@@ -63,6 +65,9 @@ extern AudioConnection          patchCord27;
 extern AudioConnection          patchCord28;
 extern AudioConnection          patchCord29;
 extern AudioConnection          patchCord30;
+extern AudioConnection          patchCord31;
+extern AudioConnection          patchCord32;
+extern AudioConnection          patchCord33;
 extern AudioControlSGTL5000     sgtl5000_1;     //xy=958.3333282470703,392.33330059051514
 // GUItool: end automatically generated code
 
@@ -80,6 +85,7 @@ extern Bounce bouton_sequence;
 extern Bounce bouton_ok;
 extern Bounce tab_boutons_son[NBR_BOUTONS_SON];
 extern Bounce boutonRec;
+extern Bounce bouton_effets;
 
 //autres variables
 extern etat fonctionnement;

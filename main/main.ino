@@ -94,6 +94,12 @@ void setup() {
   mixer7.gain(2, 0.8);
   mixer7.gain(3, 0.8);
 
+  mixer8.gain(0, 0);
+  mixer8.gain(1, 0.8);
+  mixer8.gain(2, 0.8);
+  mixer8.gain(3, 0.8);
+
+  reverb1.reverbTime(0.5);
   Serial.println("Audio ready");
 
   for(int i=0; i!=7; i++){
@@ -102,6 +108,8 @@ void setup() {
   //jsp pk mais ca veut pas pr la 7
   //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
   pinMode(9, INPUT_PULLUP);
+  pinMode(11, INPUT_PULLUP);
+  
   pinMode(CLK, INPUT_PULLUP);
   pinMode(DT, INPUT_PULLUP);
   pinMode(SW, INPUT_PULLUP);
@@ -117,6 +125,7 @@ long oldPosition  = -999;
 void loop() {
   bouton_ok.update();
   bouton_sequence.update();
+  bouton_effets.update();
   display.clearDisplay();
   updateMicrophone();
   
@@ -198,6 +207,12 @@ void loop() {
       fonctionnement=NORMAL;
       sequence_lue=-1;
     }
+  }
+  bouton_effets.update();
+  if(bouton_effets.fallingEdge()){
+    mixer8.gain(0, 1.6);
+    mixer8.gain(1, 0);
+    printf("je dois encleché un effet\n");
   }
 
   fonctionnement_sample();
