@@ -120,7 +120,7 @@ void loop() {
   display.clearDisplay();
   updateMicrophone();
   
-  /*static long somme = 0;
+  static long somme = 0;
   static int nb_lectures = 0;
 
   somme += analogRead(A1);
@@ -140,7 +140,7 @@ void loop() {
     Serial.print(val1);
     Serial.print("  ->  volume = ");
     Serial.println(volume_courant);
-  }*/
+  }
 
   //affichage_normal();
   fonctionnement_sample();

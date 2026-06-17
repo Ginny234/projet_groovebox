@@ -15,10 +15,8 @@ unsigned long appuiDebut = 0;
 void setupMicrophone() {
   pinMode(PIN_BOUTON_REC, INPUT_PULLUP);
 
-  sgtl5000_1.enable();
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
   sgtl5000_1.micGain(45);
-  sgtl5000_1.volume(0.9);
 
   if (!SD.begin(BUILTIN_SDCARD)) {
     Serial.println("Erreur SD");
