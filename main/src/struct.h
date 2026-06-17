@@ -44,6 +44,12 @@
 #define SW 35
 
 typedef enum {
+  AUCUN,
+  REVERB,
+  ROBOTIQUE,
+}effet;
+
+typedef enum {
   MENU,
   NORMAL,
   ENREGISTREMENT_SEQUENCE,

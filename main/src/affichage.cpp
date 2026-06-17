@@ -31,22 +31,22 @@ void affichage_normal(){
   if(playSdWav1.isPlaying()){
     affichage_sample(0);
   }
-  if(playSdWav2.isPlaying()){
+  else if(playSdWav2.isPlaying()){
     affichage_sample(1);
   }
-    if(playSdWav3.isPlaying()){
+  else if(playSdWav3.isPlaying()){
     affichage_sample(2);
   }
-  if(playSdWav4.isPlaying()){
+  else if(playSdWav4.isPlaying()){
     affichage_sample(3);
   }
-  if(playSdWav5.isPlaying()){
+  else if(playSdWav5.isPlaying()){
     affichage_sample(4);
   }
-  if(playSdWav6.isPlaying()){
+  else if(playSdWav6.isPlaying()){
     affichage_sample(5);
   }
-  if(playSdWav7.isPlaying()){
+  else if(playSdWav7.isPlaying()){
     affichage_sample(6);
   }
 }

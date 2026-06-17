@@ -9,7 +9,7 @@ int baisser_position(int position){
 
 int monter_position(int position, int max){
   if (position++>=max){
-    return max;
+    return 0;
   }
   return position++;
 }

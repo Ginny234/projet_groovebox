@@ -57,6 +57,15 @@ void setup() {
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.8);
 
+  // Voix propre type radio
+  filter1.frequency(1000);
+  filter1.resonance(1.5);
+
+  // Robot léger
+  modulator.begin(WAVEFORM_SINE);
+  modulator.frequency(35); // essaie 25, 35, 50
+  modulator.amplitude(0.5); // plus petit = plus propre
+
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
   mixer1.gain(2, 0.8);
@@ -210,9 +219,31 @@ void loop() {
   }
   bouton_effets.update();
   if(bouton_effets.fallingEdge()){
-    mixer8.gain(0, 1.6);
-    mixer8.gain(1, 0);
-    printf("je dois encleché un effet\n");
+    effet_actif=monter_position(effet_actif, 2);
+    switch(effet_actif){
+      case AUCUN:
+        mixer8.gain(0, 0);
+        mixer8.gain(1, 0.8);
+        mixer8.gain(2, 0);
+        mixer8.gain(3, 0);
+        break;
+      case REVERB:
+        mixer8.gain(0, 1.6);
+        mixer8.gain(1, 0);
+        mixer8.gain(2, 0);
+        mixer8.gain(3, 0);
+        break;
+      case ROBOTIQUE:
+        mixer8.gain(0, 0);
+        mixer8.gain(1, 0);
+        mixer8.gain(2, 1.6);
+        mixer8.gain(3, 0);
+        break;
+      default:
+        effet_actif=AUCUN;
+        break;
+    }
+    printf("je dois encleché un effet, %d\n");
   }
 
   fonctionnement_sample();
