@@ -69,6 +69,8 @@ void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
     sprintf(effet, "Effet:%d", effet_actif);
     display.setCursor(SCREEN_WIDTH-strlen(effet)*6, 8);
     display.print(effet);
+    display.setCursor(0, SCREEN_HEIGHT - 8*5);
+    display.print("Maintenir 'micro' appuye pour lancer un \n enregistrement");
   }
   display.display();
 }

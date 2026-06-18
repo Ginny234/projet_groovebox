@@ -16,13 +16,10 @@
 #include "src/sequences.h"
 #include "src/microphone.h"
 //commentaire test
-bool lit_sequence;
-int sequence_lue;
 
 void setup() {
-  lit_sequence=false;
-  sequence_lue=-1;
   volume_courant=1.0f;
+  fonctionnement=NORMAL;
 
   for(int i=0; i!=NBR_SEQUENCES; i++){
     tab_seq[i]=NULL;
@@ -214,7 +211,6 @@ void loop() {
     }
     if(fonctionnement==LECTURE_SEQUENCE){
       fonctionnement=NORMAL;
-      sequence_lue=-1;
     }
   }
   if(bouton_effets.fallingEdge()){
