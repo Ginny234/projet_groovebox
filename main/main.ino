@@ -217,8 +217,8 @@ void loop() {
       sequence_lue=-1;
     }
   }
-  bouton_effets.update();
   if(bouton_effets.fallingEdge()){
+    printf("bonjour\n");
     effet_actif=monter_position(effet_actif, 2);
     switch(effet_actif){
       case AUCUN:

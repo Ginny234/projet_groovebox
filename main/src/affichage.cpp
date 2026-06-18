@@ -64,6 +64,12 @@ void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
   display.print("Groupe Vocodeur\n");
   display.setCursor(SCREEN_WIDTH-strlen(vol)*6, 0);
   display.print(vol);
+  if(fonctionnement==NORMAL){
+    char effet[20];
+    sprintf(effet, "Effet:%d", effet_actif);
+    display.setCursor(SCREEN_WIDTH-strlen(effet)*6, 8);
+    display.print(effet);
+  }
   display.display();
 }
 
