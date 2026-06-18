@@ -120,6 +120,8 @@ void setup() {
   pinMode(CLK, INPUT_PULLUP);
   pinMode(DT, INPUT_PULLUP);
   pinMode(SW, INPUT_PULLUP);
+
+  lire_fichier_sequence();
 }
 #include <Encoder.h>
 
