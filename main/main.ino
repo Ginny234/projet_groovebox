@@ -224,6 +224,7 @@ void loop() {
     }
     else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
       printf("enregistrement terminé\n");
+      sauvegarder_sequences(tab_seq);
       fonctionnement=NORMAL;
     }
     if(fonctionnement==LECTURE_SEQUENCE){
