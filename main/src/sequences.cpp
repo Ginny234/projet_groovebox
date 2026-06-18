@@ -63,17 +63,19 @@ void supprimer_sequences(sequence* seq[NBR_SEQUENCES]){
 
 void sauvegarder_sequences(sequence* seq[NBR_SEQUENCES]){
   printf("je sauvergarde les séquences...\n");
-  File fichier=SD.open("sequences.TXT", FILE_READ);
-  for(int i=0; i!=NBR_SEQUENCES; i++){
-    if(seq[i]!=NULL){
-      char ligne[16];
-      sprintf(ligne, "sequence %d\n", i);
-      fichier.println(ligne);
-      sequence* temp=seq[i];
-      while(temp!=NULL){
-        sprintf(ligne, "%d\n", temp->id_sample);
+  File fichier=SD.open("sequences.TXT", FILE_WRITE);
+  if(fichier!=NULL){
+    for(int i=0; i!=NBR_SEQUENCES; i++){
+      if(seq[i]!=NULL){
+        char ligne[16];
+        sprintf(ligne, "sequence %d\n", i);
         fichier.println(ligne);
-        temp=temp->suiv;
+        sequence* temp=seq[i];
+        while(temp!=NULL){
+          sprintf(ligne, "%d\n", temp->id_sample);
+          fichier.println(ligne);
+          temp=temp->suiv;
+        }
       }
     }
   }
