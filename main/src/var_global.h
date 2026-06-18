@@ -31,8 +31,13 @@ extern AudioMixer4              mixer4; //xy=616.3333740234375,385.6666870117187
 extern AudioMixer4              mixer3;         //xy=622.3333511352539,282.3333320617676
 extern AudioMixer4              mixer6; //xy=765.6666679382324,413.33333015441895
 extern AudioMixer4              mixer5; //xy=783.6666030883789,219.33332061767578
-extern AudioMixer4              mixer7; //xy=866.6666641235352,322.33333015441895
-extern AudioOutputI2S           i2s1;           //xy=1041.3333587646484,321.33330154418945
+extern AudioMixer4              mixer7; //xy=863.6666793823242,317.3333396911621
+extern AudioEffectReverb        reverb1;        //xy=955.238166809082,177.61904430389404
+extern AudioFilterStateVariable filter1;        //xy=1061.428554534912,90.4761905670166
+extern AudioMixer4              mixer8; //xy=1104.6666564941406,272.333309173584
+extern AudioOutputI2S           i2s1;           //xy=1283.6666946411133,272.33333587646484
+extern AudioSynthWaveform       modulator;      //xy=1175.71435546875,27.619056701660156
+extern AudioEffectMultiply      multiply1;      //xy=1214.2858200073242,150.47620487213135
 extern AudioConnection          patchCord1;
 extern AudioConnection          patchCord2;
 extern AudioConnection          patchCord3;
@@ -63,6 +68,14 @@ extern AudioConnection          patchCord27;
 extern AudioConnection          patchCord28;
 extern AudioConnection          patchCord29;
 extern AudioConnection          patchCord30;
+extern AudioConnection          patchCord31;
+extern AudioConnection          patchCord32;
+extern AudioConnection          patchCord33;
+extern AudioConnection          patchCord34;
+extern AudioConnection          patchCord35;
+extern AudioConnection          patchCord36;
+extern AudioConnection          patchCord37;
+extern AudioConnection          patchCord38;
 extern AudioControlSGTL5000     sgtl5000_1;     //xy=958.3333282470703,392.33330059051514
 // GUItool: end automatically generated code
 
@@ -80,9 +93,11 @@ extern Bounce bouton_sequence;
 extern Bounce bouton_ok;
 extern Bounce tab_boutons_son[NBR_BOUTONS_SON];
 extern Bounce boutonRec;
+extern Bounce bouton_effets;
 
 //autres variables
 extern etat fonctionnement;
+extern effet effet_actif;
 extern int position_menu;
 extern sequence* tab_seq[NBR_SEQUENCES];
 extern float volume_courant;  // Volume initial entre 0 et 1

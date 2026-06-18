@@ -16,13 +16,10 @@
 #include "src/sequences.h"
 #include "src/microphone.h"
 //commentaire test
-bool lit_sequence;
-int sequence_lue;
 
 void setup() {
-  lit_sequence=false;
-  sequence_lue=-1;
   volume_courant=1.0f;
+  fonctionnement=NORMAL;
 
   for(int i=0; i!=NBR_SEQUENCES; i++){
     tab_seq[i]=NULL;
@@ -56,6 +53,15 @@ void setup() {
 
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.8);
+
+  // Voix propre type radio
+  filter1.frequency(1000);
+  filter1.resonance(1.5);
+
+  // Robot léger
+  modulator.begin(WAVEFORM_SINE);
+  modulator.frequency(35); // essaie 25, 35, 50
+  modulator.amplitude(0.5); // plus petit = plus propre
 
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
@@ -94,6 +100,12 @@ void setup() {
   mixer7.gain(2, 0.8);
   mixer7.gain(3, 0.8);
 
+  mixer8.gain(0, 0);
+  mixer8.gain(1, 0.8);
+  mixer8.gain(2, 0.8);
+  mixer8.gain(3, 0.8);
+
+  reverb1.reverbTime(0.5);
   Serial.println("Audio ready");
 
   for(int i=0; i!=7; i++){
@@ -102,6 +114,8 @@ void setup() {
   //jsp pk mais ca veut pas pr la 7
   //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
   pinMode(9, INPUT_PULLUP);
+  pinMode(11, INPUT_PULLUP);
+  
   pinMode(CLK, INPUT_PULLUP);
   pinMode(DT, INPUT_PULLUP);
   pinMode(SW, INPUT_PULLUP);
@@ -117,6 +131,7 @@ long oldPosition  = -999;
 void loop() {
   bouton_ok.update();
   bouton_sequence.update();
+  bouton_effets.update();
   display.clearDisplay();
   updateMicrophone();
   
@@ -196,8 +211,35 @@ void loop() {
     }
     if(fonctionnement==LECTURE_SEQUENCE){
       fonctionnement=NORMAL;
-      sequence_lue=-1;
     }
+  }
+  if(bouton_effets.fallingEdge()){
+    printf("bonjour\n");
+    effet_actif=monter_position(effet_actif, 2);
+    switch(effet_actif){
+      case AUCUN:
+        mixer8.gain(0, 0);
+        mixer8.gain(1, 0.8);
+        mixer8.gain(2, 0);
+        mixer8.gain(3, 0);
+        break;
+      case REVERB:
+        mixer8.gain(0, 1.6);
+        mixer8.gain(1, 0);
+        mixer8.gain(2, 0);
+        mixer8.gain(3, 0);
+        break;
+      case ROBOTIQUE:
+        mixer8.gain(0, 0);
+        mixer8.gain(1, 0);
+        mixer8.gain(2, 1.6);
+        mixer8.gain(3, 0);
+        break;
+      default:
+        effet_actif=AUCUN;
+        break;
+    }
+    printf("je dois encleché un effet, %d\n");
   }
 
   fonctionnement_sample();

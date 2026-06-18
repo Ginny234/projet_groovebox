@@ -31,22 +31,22 @@ void affichage_normal(){
   if(playSdWav1.isPlaying()){
     affichage_sample(0);
   }
-  if(playSdWav2.isPlaying()){
+  else if(playSdWav2.isPlaying()){
     affichage_sample(1);
   }
-    if(playSdWav3.isPlaying()){
+  else if(playSdWav3.isPlaying()){
     affichage_sample(2);
   }
-  if(playSdWav4.isPlaying()){
+  else if(playSdWav4.isPlaying()){
     affichage_sample(3);
   }
-  if(playSdWav5.isPlaying()){
+  else if(playSdWav5.isPlaying()){
     affichage_sample(4);
   }
-  if(playSdWav6.isPlaying()){
+  else if(playSdWav6.isPlaying()){
     affichage_sample(5);
   }
-  if(playSdWav7.isPlaying()){
+  else if(playSdWav7.isPlaying()){
     affichage_sample(6);
   }
 }
@@ -64,6 +64,14 @@ void affichage_base(){//tous menus compris, afficher absolument TOUT le temps
   display.print("Groupe Vocodeur\n");
   display.setCursor(SCREEN_WIDTH-strlen(vol)*6, 0);
   display.print(vol);
+  if(fonctionnement==NORMAL){
+    char effet[20];
+    sprintf(effet, "Effet:%d", effet_actif);
+    display.setCursor(SCREEN_WIDTH-strlen(effet)*6, 8);
+    display.print(effet);
+    display.setCursor(0, SCREEN_HEIGHT - 8*5);
+    display.print("Maintenir 'micro' appuye pour lancer un \n enregistrement");
+  }
   display.display();
 }
 
