@@ -161,6 +161,20 @@ void loop() {
   fonctionnement_sample();
   
   if (fonctionnement==MENU){
+    long newPosition = myEnc.read();
+    if (newPosition != oldPosition) {
+      //Serial.println(newPosition);
+      printf("avant:%d, après:%d\n", newPosition, oldPosition);
+      if(newPosition<oldPosition){
+        position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
+        //printf("haut\n");
+      }
+      else{
+        position_menu=baisser_position(position_menu);
+        //printf("bas\n");
+      }
+      oldPosition = newPosition;
+    }
     affichage_menu(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
