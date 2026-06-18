@@ -115,6 +115,7 @@ void setup() {
   //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
   pinMode(9, INPUT_PULLUP);
   pinMode(11, INPUT_PULLUP);
+  pinMode(12, INPUT_PULLUP);
   
   pinMode(CLK, INPUT_PULLUP);
   pinMode(DT, INPUT_PULLUP);
@@ -132,6 +133,8 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   bouton_effets.update();
+  bouton_reset.update();
+
   display.clearDisplay();
   updateMicrophone();
   
@@ -254,6 +257,10 @@ void loop() {
         break;
     }
     printf("je dois encleché un effet, %d\n");
+  }
+  if(bouton_reset.fallingEdge()){
+    printf("je dois supprimer des trucs\n");
+    reset();
   }
 
   fonctionnement_sample();

@@ -13,3 +13,8 @@ int monter_position(int position, int max){
   }
   return position++;
 }
+
+void reset(){
+  supprimer_sequences(tab_seq);
+  SD.remove("REC.RAW");
+}

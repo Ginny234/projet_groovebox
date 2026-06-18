@@ -102,6 +102,7 @@ Bounce bouton_ok = Bounce(SW, 15);
 Bounce tab_boutons_son[NBR_BOUTONS_SON]={button0, button1, button2, button3, button4, button5, button6};
 Bounce boutonRec = Bounce(PIN_BOUTON_REC, 15);
 Bounce bouton_effets = Bounce(11, 15);
+Bounce bouton_reset = Bounce(12, 15);
 
 //autres variables
 etat fonctionnement;

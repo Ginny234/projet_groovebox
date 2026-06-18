@@ -48,3 +48,15 @@ void lire_sequence(sequence* seq){
     }
   }while(bouton_ok.fallingEdge()==false && sortie==false);
 }
+
+void supprimer_sequences(sequence* seq[NBR_SEQUENCES]){
+  for(int i=0; i!=NBR_SEQUENCES; i++){
+    if(seq[i]!=NULL){
+      while(seq[i]!=NULL){
+        sequence* temp=seq[i];
+        seq[i]=seq[i]->suiv;
+        free(temp);
+      }
+    }
+  }
+}
