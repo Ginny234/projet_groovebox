@@ -4,6 +4,7 @@
 #include "struct.h"
 #include "var_global.h"
 #include "samples.h"
+#include "modifs_son.h"
 
 sequence* initia_sequence(int id_sample);
 sequence* ajouter_sequence(sequence* nv_sample, sequence* seq);

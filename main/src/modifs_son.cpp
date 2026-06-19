@@ -20,3 +20,104 @@ void baisser_volume(){
     printf("Volume baisse: %.2f\n", volume_courant);
   }
 }
+
+void setup_mixers(){
+  mixer1.gain(0, 0.8);
+  mixer1.gain(1, 0.8);
+  mixer1.gain(2, 0.8);
+  mixer1.gain(3, 0.8);
+
+  mixer2.gain(0, 0.8);
+  mixer2.gain(1, 0.8);
+  mixer2.gain(2, 0.8);
+  mixer2.gain(3, 0.8);
+
+  mixer3.gain(0, 0.8);
+  mixer3.gain(1, 0.8);
+  mixer3.gain(2, 0.8);
+  mixer3.gain(3, 0.8);
+
+  mixer4.gain(0, 0.8);
+  mixer4.gain(1, 0.8);
+  mixer4.gain(2, 0.8);
+  mixer4.gain(3, 0.8);
+  
+  mixer5.gain(0, 0.8);
+  mixer5.gain(1, 0.8);
+  mixer5.gain(2, 0.8);
+  mixer5.gain(3, 0.8);
+  
+  mixer6.gain(0, 0.8);
+  mixer6.gain(1, 0.8);
+  mixer6.gain(2, 0.8);
+  mixer6.gain(3, 0.8);
+
+  mixer7.gain(0, 0.8);
+  mixer7.gain(1, 0.8);
+  mixer7.gain(2, 0.8);
+  mixer7.gain(3, 0.8);
+
+  mixer8.gain(0, 0);
+  mixer8.gain(1, 0.8);
+  mixer8.gain(2, 0.8);
+  mixer8.gain(3, 0.8);
+}
+
+void naviguation_effets(){
+      effet_actif=monter_position(effet_actif, 2);
+    switch(effet_actif){
+      case AUCUN:
+        mixer8.gain(0, 0);
+        mixer8.gain(1, 0.8);
+        mixer8.gain(2, 0);
+        mixer8.gain(3, 0);
+        break;
+      case REVERB:
+        mixer8.gain(0, 1.6);
+        mixer8.gain(1, 0);
+        mixer8.gain(2, 0);
+        mixer8.gain(3, 0);
+        break;
+      case ROBOTIQUE:
+        mixer8.gain(0, 0);
+        mixer8.gain(1, 0);
+        mixer8.gain(2, 1.6);
+        mixer8.gain(3, 0);
+        break;
+      default:
+        effet_actif=AUCUN;
+        break;
+    }
+}
+
+void modifs_volume(){
+  static long somme = 0;
+  static int nb_lectures = 0;
+
+  somme += analogRead(A1);
+  nb_lectures++;
+
+  if (nb_lectures >= 64) {  // 64 au lieu de 16
+    int val1 = somme / 64;
+    somme = 0;
+    nb_lectures = 0;
+
+    int val_min = 0;
+    int val_max = 1023;
+    volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+
+    sgtl5000_1.volume(volume_courant);
+    Serial.print("brut A1 = ");
+    Serial.print(val1);
+    Serial.print("  ->  volume = ");
+    Serial.println(volume_courant);
+  }
+}
+
+void fonctionnement_effets(){
+  bouton_effets.update();
+  if(bouton_effets.fallingEdge()){
+    naviguation_effets();
+    printf("je dois encleché un effet, %d\n");
+  }
+}

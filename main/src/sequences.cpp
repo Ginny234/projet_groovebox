@@ -37,6 +37,8 @@ void lire_sequence(sequence* seq){
     unsigned long debut_attente=millis();
     while(millis()-debut_attente<400){
       fonctionnement_sample();
+      fonctionnement_effets();
+      modifs_volume();
       bouton_ok.update();
       if(bouton_ok.fallingEdge()){
         sortie=true;
@@ -59,6 +61,7 @@ void supprimer_sequences(sequence* seq[NBR_SEQUENCES]){
       }
     }
   }
+  SD.remove("sequences.TXT");
 }
 
 void sauvegarder_sequences(sequence* seq[NBR_SEQUENCES]){
