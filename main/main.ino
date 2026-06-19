@@ -66,7 +66,6 @@ void setup() {
   modulator.amplitude(0.5); // plus petit = plus propre
 
   reverb1.reverbTime(0.5);
-  Serial.println("Audio ready");
 
   for(int i=0; i!=7; i++){
     pinMode(i, INPUT_PULLUP);

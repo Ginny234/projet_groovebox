@@ -25,10 +25,8 @@ void lire_sequence(sequence* seq){
   bool sortie=false;
   do{
     bouton_ok.update();
-    printf("okkkk\n");
     sequence* temp=seq;
     while(temp!=NULL){
-      printf("%d\n", temp->id_sample);
       //fonctionnement_sample();
       lire_sample_sequence(temp->id_sample);
     
@@ -44,7 +42,6 @@ void lire_sequence(sequence* seq){
         sortie=true;
       }
     }
-    printf("yayyyy\n");
       //delay(400);
       //temp=temp->suiv;
     }
@@ -93,38 +90,20 @@ void lire_fichier_sequence(){
     int position_tab=0;
     bool sortie=false;
     while(fichier.available()){
-      //printf("%s\n", ligne);
       int nbr_cara =fichier.readBytesUntil('\n', ligne,20 );
       ligne[nbr_cara]='\0';
       if (ligne[0]=='s'){
-        printf("c un nom de séquence\n");
         sscanf(ligne, "sequence %d\n", &position_tab);
-        printf("position tab:%d\n", position_tab);
       }
       else{
-        printf("c un id, ligne=%s\n", ligne);
         int id;
         if(position_tab>4 || position_tab<0){
           position_tab=0;
         }
         sscanf(ligne, "%d\n", &id);
-        printf("int:%d\n", id);
         tab_seq[position_tab]=ajouter_sequence(tab_seq[position_tab], initia_sequence(id));
       }
     }
-    printf("c la fin de la lecture\n");
   }
-  //fichier.close();
-  printf("fin de la fonction\n");
-  /*char lettre_ou_num=fgetc(fichier);
-  int id;
-  sequence* nv_seq;
-  while(lettre_ou_num>='0' || lettre_ou_num<='9' ){ //si c'est un chiffre
-    fseek(fichier, -1, SEEK_CUR);
-    fscanf(fichier,"%d\n",&id);
-    nv_seq=ajouter_sequence(nv_seq,initia_sequence(id));
-    lettre_ou_num=fgetc(fichier);
-  }
-  return nv_seq;*/
 }
 

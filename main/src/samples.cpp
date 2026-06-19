@@ -1,6 +1,5 @@
 #include "samples.h"
 void lire_sample(int id){
-  printf("id du son qui se lance:%d\n", id);
   switch(id){
     case 0:
       playSdWav1.play("SnareDrum.WAV");
@@ -41,7 +40,6 @@ void fonctionnement_sample(){
     tab_boutons_son[i].update();
     if(tab_boutons_son[i].fallingEdge()){
       lire_sample(i);
-      printf("t'as appuye sur un bouton, %d\n", i);
     }
   }
 }
