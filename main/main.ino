@@ -1,12 +1,3 @@
-// Advanced Microcontroller-based Audio Workshop
-//
-// http://www.pjrc.com/store/audio_tutorial_kit.html
-// https://hackaday.io/project/8292-microcontroller-audio-workshop-had-supercon-2015
-// 
-// Part 2-3: Playing Samples
-
-// WAV files converted to code by wav2sketch
-
 #include "src/struct.h"
 #include "src/var_global.h"
 #include "src/affichage.h"
@@ -15,7 +6,6 @@
 #include "src/samples.h"
 #include "src/sequences.h"
 #include "src/microphone.h"
-//commentaire test
 
 void setup() {
   volume_courant=1.0f;
@@ -87,35 +77,33 @@ void setup() {
 }
 #include <Encoder.h>
 
-// Change these two numbers to the pins connected to your encoder.
-//   Best Performance: both pins have interrupt capability
-//   Good Performance: only the first pin has interrupt capability
-//   Low Performance:  neither pin has interrupt capability
 Encoder myEnc(DT, CLK);
 long oldPosition  = -999;
 void loop() {
+  //mise à jour des boutons etc
   bouton_ok.update();
   bouton_sequence.update();
   bouton_reset.update();
-
-  display.clearDisplay();
   updateMicrophone();
-  modifs_volume();
-  //affichage_normal();
-  fonctionnement_sample();
+
+  //clear Diplay au début, aucune des fonction d'affichage ne l'utilise
+  display.clearDisplay();
   
+  //fonctionement du bouton encodeur
   if (fonctionnement==MENU){
     long newPosition = myEnc.read();
+    //compare les position du bouton -> si différente, doit naviguer dans le menu
     if (newPosition != oldPosition) {
       if(newPosition<oldPosition){
         position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
       }
       else{
         position_menu=baisser_position(position_menu);
-
       }
+      //à la fin on met à jour l'ancienne positions
       oldPosition = newPosition;
     }
+    //on affiche le menu
     affichage_menu(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
@@ -127,6 +115,10 @@ void loop() {
     }
   }
 
+  //le comportement des bouton ok et menus changent en fonction de fonctionnement
+  //-> on regarde donc une seule fois s'il sont appuyés et agis en fonction
+  //(ça évite un bug où les boutons était considérer comment appuyés soit deux fois de suite pour un seul appui 
+  // soit jamais appuyé pour leur second comportement)
   if (bouton_sequence.fallingEdge()){
     if(fonctionnement==NORMAL){
       fonctionnement=MENU;
@@ -136,33 +128,45 @@ void loop() {
     }
   }
   if(bouton_ok.fallingEdge()){
+    //fonctionnemnt dans le menu
     if(fonctionnement==MENU){
+      //pendant un appui du bouton ok, stop le fonctionnement du programme pour vérifier la longuer de l'appui
       debut_attente=millis();
       while(digitalRead(SW)==LOW){
         fin_attente=millis();
       }
+
+      //si on était sur une séquence vide lors de l'appui ou qu'on a appuier pendant plus de 3 secondes onenregistrer une séquence à cet emplacement
       if(fin_attente-debut_attente>3000 || tab_seq[position_menu]==NULL){
         tab_seq[position_menu]=NULL;
         fonctionnement=ENREGISTREMENT_SEQUENCE;
       }
+      //sinon on lit simplement la séquence
       else if (tab_seq[position_menu]!=NULL){
         lire_sequence(tab_seq[position_menu]);
       }
     }
+
+    //si on était en train d'enregistrer une séquence stop l'enregistrement
     else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
       sauvegarder_sequences(tab_seq);
       fonctionnement=NORMAL;
     }
-    if(fonctionnement==LECTURE_SEQUENCE){
+
+    /*if(fonctionnement==LECTURE_SEQUENCE){
       fonctionnement=NORMAL;
-    }
+    }*/
   }
+
   if(bouton_reset.fallingEdge()){
     reset();
   }
 
+  modifs_volume();
+  //fonctionnement_sample();
   fonctionnement_effets();
   fonctionnement_sample();
+  
   affichage_normal();//affichage des samples quand elles sont jouées
   affichage_base();
   display.display();

@@ -1,4 +1,6 @@
 #include "modifs_son.h"
+
+//anciennes fonctions, utilisés avec des bouton haut et bas
 void augmenter_volume(){
   if (volume_courant < VOLUME_MAX){
     volume_courant += VOLUME_STEP;
@@ -21,6 +23,7 @@ void baisser_volume(){
   }
 }
 
+//une seule fonction pour le setup des mixers pour rendre l'affichage plus lisible
 void setup_mixers(){
   mixer1.gain(0, 0.8);
   mixer1.gain(1, 0.8);
@@ -64,21 +67,27 @@ void setup_mixers(){
 }
 
 void naviguation_effets(){
-      effet_actif=monter_position(effet_actif, 2);
+    effet_actif=monter_position(effet_actif, 2);
+    //entrée 0 -> reverb appliqué à la sortie du mixer 7
+    //entrée 1 -> aucun effet appliqué à la sortie du mixer 7
+    //entrée 2 -> effet de son robotique appliqué à la sortie du mixer 7
     switch(effet_actif){
       case AUCUN:
+        //son sortie ne prend en compte que l'entrée 1 -> pas d'effet
         mixer8.gain(0, 0);
         mixer8.gain(1, 0.8);
         mixer8.gain(2, 0);
         mixer8.gain(3, 0);
         break;
       case REVERB:
+        //son sortie ne prend en compte que l'entrée 0...
         mixer8.gain(0, 1.6);
         mixer8.gain(1, 0);
         mixer8.gain(2, 0);
         mixer8.gain(3, 0);
         break;
       case ROBOTIQUE:
+        //même chose que les 2 autres effets
         mixer8.gain(0, 0);
         mixer8.gain(1, 0);
         mixer8.gain(2, 1.6);
