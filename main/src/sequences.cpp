@@ -63,16 +63,17 @@ void supprimer_sequences(sequence* seq[NBR_SEQUENCES]){
 
 void sauvegarder_sequences(sequence* seq[NBR_SEQUENCES]){
   printf("je sauvergarde les séquences...\n");
+  SD.remove("sequences.TXT");
   File fichier=SD.open("sequences.TXT", FILE_WRITE);
   if(fichier!=NULL){
     for(int i=0; i!=NBR_SEQUENCES; i++){
       if(seq[i]!=NULL){
         char ligne[16];
-        sprintf(ligne, "sequence %d\n", i);
+        sprintf(ligne, "sequence %d", i);
         fichier.println(ligne);
         sequence* temp=seq[i];
         while(temp!=NULL){
-          sprintf(ligne, "%d\n", temp->id_sample);
+          sprintf(ligne, "%d", temp->id_sample);
           fichier.println(ligne);
           temp=temp->suiv;
         }
@@ -84,20 +85,28 @@ void sauvegarder_sequences(sequence* seq[NBR_SEQUENCES]){
 
 sequence* lire_fichier_sequence(){
   File fichier=SD.open("sequences.txt", FILE_READ);
-  char ligne[21];
-  int position_tab=0;
-  while(fichier.readBytesUntil('\n', ligne,20 )!=0){
-    if (ligne[0]!='s'){
-      sscanf(ligne, "sequence %d\n", &position_tab);
-    }
-    else{
-      int id;
-      if(position_tab>4 || position_tab<0){
-        position_tab=0;
+  if(fichier!=NULL){
+    char ligne[21];
+    int position_tab=0;
+    bool sortie=false;
+    while(fichier.available()){
+     //printf("%s\n", ligne);
+      fichier.readBytesUntil('\n', ligne,20 );
+      if (ligne[0]=='s'){
+        printf("c un nom de séquence\n");
+        sscanf(ligne, "sequence %d\n", &position_tab);
+        printf("position tab:%d\n", position_tab);
       }
-      sscanf(ligne, "%d\n", id);
-      printf("int:%d\n", id);
-      //tab_seq[position_tab]=ajouter_sequence(tab_seq[position_tab], initia_sequence(id));
+      else{
+        printf("c un id, ligne=%s\n", ligne);
+        int id;
+        if(position_tab>4 || position_tab<0){
+          position_tab=0;
+        }
+        sscanf(ligne, "%d\n", id);
+        printf("int:%d\n", id);
+        //tab_seq[position_tab]=ajouter_sequence(tab_seq[position_tab], initia_sequence(id));
+      }
     }
   }
   fichier.close();

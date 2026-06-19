@@ -146,7 +146,7 @@ void loop() {
   somme += analogRead(A1);
   nb_lectures++;
 
-  if (nb_lectures >= 64) {  // 64 au lieu de 16
+  /*if (nb_lectures >= 64) {  // 64 au lieu de 16
     int val1 = somme / 64;
     somme = 0;
     nb_lectures = 0;
@@ -160,7 +160,7 @@ void loop() {
     Serial.print(val1);
     Serial.print("  ->  volume = ");
     Serial.println(volume_courant);
-  }
+  }*/
 
   //affichage_normal();
   fonctionnement_sample();
