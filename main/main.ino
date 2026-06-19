@@ -122,6 +122,7 @@ void setup() {
   pinMode(SW, INPUT_PULLUP);
 
   lire_fichier_sequence();
+  printf("fin du setup");
 }
 #include <Encoder.h>
 

@@ -83,15 +83,16 @@ void sauvegarder_sequences(sequence* seq[NBR_SEQUENCES]){
   fichier.close();
 }
 
-sequence* lire_fichier_sequence(){
-  File fichier=SD.open("sequences.txt", FILE_READ);
+void lire_fichier_sequence(){
+  File fichier=SD.open("sequences.TXT", FILE_READ);
   if(fichier!=NULL){
     char ligne[21];
     int position_tab=0;
     bool sortie=false;
     while(fichier.available()){
-     //printf("%s\n", ligne);
-      fichier.readBytesUntil('\n', ligne,20 );
+      //printf("%s\n", ligne);
+      int nbr_cara =fichier.readBytesUntil('\n', ligne,20 );
+      ligne[nbr_cara]='\0';
       if (ligne[0]=='s'){
         printf("c un nom de séquence\n");
         sscanf(ligne, "sequence %d\n", &position_tab);
@@ -103,13 +104,15 @@ sequence* lire_fichier_sequence(){
         if(position_tab>4 || position_tab<0){
           position_tab=0;
         }
-        sscanf(ligne, "%d\n", id);
+        sscanf(ligne, "%d\n", &id);
         printf("int:%d\n", id);
-        //tab_seq[position_tab]=ajouter_sequence(tab_seq[position_tab], initia_sequence(id));
+        tab_seq[position_tab]=ajouter_sequence(tab_seq[position_tab], initia_sequence(id));
       }
     }
+    printf("c la fin de la lecture\n");
   }
-  fichier.close();
+  //fichier.close();
+  printf("fin de la fonction\n");
   /*char lettre_ou_num=fgetc(fichier);
   int id;
   sequence* nv_seq;
@@ -122,14 +125,3 @@ sequence* lire_fichier_sequence(){
   return nv_seq;*/
 }
 
-/*sequence* lire_fichier_tab_sequences(){
-  File fichier=SD.open("sequences.txt", FILE_WRITE);
-  while(fgetc(fichier)!=EOF){
-    int position_tab;
-    fscanf(fichier, "sequence %d\n", position_tab);
-    if(0<=position_tab<=4){
-      position_tab=0;
-    }
-    tab_seq[position_tab]=lire_fichier_sequence(fichier);
-  }
-}*/
