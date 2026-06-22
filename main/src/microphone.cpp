@@ -83,7 +83,6 @@ void updateMicrophone() {
 
   if (boutonRec.risingEdge()) {
     if(millis()-appuiDebut<3000){
-      printf("je lis un truc\n");
       playRaw1.play("REC.RAW");
     }
     boutonEnfonce = false;

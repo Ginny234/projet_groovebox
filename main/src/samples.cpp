@@ -1,6 +1,8 @@
 #include "samples.h"
 void lire_sample(int id){
-  printf("id du son qui se lance:%d\n", id);
+  //lecture des samples par des playSdWav différent 
+  //-> permet d'avoir plusieurs sample se jouant en simultané
+  //-> permet de facilement distingué quels sample sont jouée pour l'affichage
   switch(id){
     case 0:
       playSdWav1.play("SnareDrum.WAV");
@@ -29,19 +31,22 @@ void lire_sample(int id){
 
 void lire_sample_sequence(int id){
   char* nom_fichier[NBR_BOUTONS_SON]={"SnareDrum.WAV","Hihat.WAV", "TomTom.WAV", "Cymbal.WAV", "Gong.WAV", "Misc.WAV", "CashRegister.WAV"};
+  //boucle for qui parcours le tableau des sons à la recherche de celui à jouer
   for(int i=0; i!=NBR_BOUTONS_SON; i++){
     if(i==id){
+      //PlaySdWav dédiée à la lectures des séquences -> On peut jouer des sample par dessus
       playSdWav8.play(nom_fichier[i]);
     }
   }
 }
 
 void fonctionnement_sample(){
+  //parcours tableau de tous les boutons de son (déclaré et définis dans var_global)
+  //les update et si ils sont appuyé joue le son associé
   for(int i=0; i!=NBR_BOUTONS_SON;i++){
     tab_boutons_son[i].update();
     if(tab_boutons_son[i].fallingEdge()){
       lire_sample(i);
-      printf("t'as appuye sur un bouton, %d\n", i);
     }
   }
 }

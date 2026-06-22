@@ -3,8 +3,12 @@
 
 #include "struct.h"
 #include "var_global.h"
+#include "menus.h"
 
 void augmenter_volume();
 void baisser_volume();
-
+void modifs_volume();
+void naviguation_effets();
+void setup_mixers();
+void fonctionnement_effets();
 #endif
