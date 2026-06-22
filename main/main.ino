@@ -6,6 +6,10 @@
 #include "src/samples.h"
 #include "src/sequences.h"
 #include "src/microphone.h"
+#include <Encoder.h>
+
+Encoder myEnc(DT, CLK);
+long oldPosition  = -999;
 
 void setup() {
   volume_courant=1.0f;
@@ -37,11 +41,6 @@ void setup() {
   display.setTextColor(SSD1306_WHITE);
 
   AudioMemory(30);
-
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("Erreur SD");
-    while (1);
-  }
 
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.8);
@@ -75,10 +74,7 @@ void setup() {
   lire_fichier_sequence();
   printf("fin du setup");
 }
-#include <Encoder.h>
 
-Encoder myEnc(DT, CLK);
-long oldPosition  = -999;
 void loop() {
   //mise à jour des boutons etc
   bouton_ok.update();

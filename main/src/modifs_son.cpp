@@ -106,20 +106,20 @@ void modifs_volume(){
   somme += analogRead(A1);
   nb_lectures++;
 
-  if (nb_lectures >= 64) {  // 64 au lieu de 16
-    int val1 = somme / 64;
+  if (nb_lectures >= 16) {
+    int val1 = somme / 16;
     somme = 0;
     nb_lectures = 0;
 
     int val_min = 0;
-    int val_max = 1023;
+    int val_max = 4095;
     volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
 
     sgtl5000_1.volume(volume_courant);
-    /*Serial.print("brut A1 = ");
+    Serial.print("brut A1 = ");
     Serial.print(val1);
     Serial.print("  ->  volume = ");
-    Serial.println(volume_courant);*/
+    Serial.println(volume_courant);
   }
 }
 
