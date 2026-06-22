@@ -26,7 +26,7 @@
 #define SDCARD_SCK_PIN   13  // Teensy 4 ignores this, uses pin 13
 
 
-#define PIN_BOUTON_REC 10
+#define PIN_BOUTON_REC 23
 
 
 #define SCREEN_WIDTH 128
