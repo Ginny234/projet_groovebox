@@ -116,10 +116,10 @@ void modifs_volume(){
     volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
 
     sgtl5000_1.volume(volume_courant);
-    Serial.print("brut A1 = ");
+    /*Serial.print("brut A1 = ");
     Serial.print(val1);
     Serial.print("  ->  volume = ");
-    Serial.println(volume_courant);
+    Serial.println(volume_courant);*/
   }
 }
 

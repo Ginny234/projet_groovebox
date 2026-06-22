@@ -1,108 +1,158 @@
 #include "microphone.h"
+#include "var_global.h"
 
-// State variables
-bool recording = false;
-bool boutonEnfonce = false;
-bool appuiLongDejaDeclenche = false;
-
-// File handle
 File frec;
 
-// Timestamps
-unsigned long startTime = 0;
-unsigned long appuiDebut = 0;
+const int chipSelect = BUILTIN_SDCARD;
+const int buttonPin = 12;
 
-void setupMicrophone() {
-  pinMode(PIN_BOUTON_REC, INPUT_PULLUP);
+unsigned long startTime;
+bool recording = false;
+bool playing = false;
+bool fileReady = false;
+
+bool buttonPressed = false;
+unsigned long buttonPressTime = 0;
+bool longPressDone = false;
+
+void handleButton();
+void startRecording();
+void continueRecording();
+void stopRecording();
+void playRecording();
+
+void microphoneSetup() {
+  pinMode(buttonPin, INPUT_PULLUP);
 
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
-  sgtl5000_1.micGain(45);
+  sgtl5000_1.micGain(30);
 
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("Erreur SD");
-    while (1);
-  }
-
-  Serial.println("SD OK");
-  Serial.println("Maintiens le bouton 3 secondes pour enregistrer.");
+  Serial.println("Micro OK");
+  Serial.println("Appui long 3s = enregistrer 5s");
+  Serial.println("Appui court = lire");
 }
 
-void demarrerEnregistrement() {
-  if (recording) return;
+void microphoneLoop() {
+  handleButton();
 
-  if (playRaw1.isPlaying()) {
-    playRaw1.stop();
+  if (recording) {
+    continueRecording();
+
+    if (millis() - startTime >= 5000) {
+      stopRecording();
+    }
   }
 
-  SD.remove("REC.RAW");
-  frec = SD.open("REC.RAW", FILE_WRITE);
+  if (playing && !playRaw1.isPlaying()) {
+    Serial.println("Lecture terminee");
+    playing = false;
+  }
+}
+
+void handleButton() {
+  bool pressed = digitalRead(buttonPin) == LOW;
+
+  if (pressed && !buttonPressed) {
+    delay(30);
+    if (digitalRead(buttonPin) == LOW) {
+      buttonPressed = true;
+      buttonPressTime = millis();
+      longPressDone = false;
+    }
+  }
+
+  if (pressed && buttonPressed && !longPressDone) {
+    if (millis() - buttonPressTime >= 3000) {
+      startRecording();
+      longPressDone = true;
+    }
+  }
+
+  if (!pressed && buttonPressed) {
+    delay(30);
+    if (digitalRead(buttonPin) == HIGH) {
+      buttonPressed = false;
+
+      if (!longPressDone) {
+        playRecording();
+      }
+    }
+  }
+}
+
+void startRecording() {
+  if (recording) return;
+
+  if (playing) {
+    playRaw1.stop();
+    playing = false;
+    delay(200);
+  }
+
+  if (SD.exists("RECORD.RAW")) {
+    SD.remove("RECORD.RAW");
+  }
+
+  frec = SD.open("RECORD.RAW", FILE_WRITE);
 
   if (!frec) {
-    Serial.println("Erreur creation fichier");
+    Serial.println("Erreur ouverture fichier");
     return;
   }
 
-  Serial.println("Nouvel enregistrement 5 secondes...");
+  Serial.println("Enregistrement pendant 5 secondes...");
   queue1.begin();
   recording = true;
+  fileReady = false;
   startTime = millis();
 }
 
-void arreterEnregistrementEtLire() {
+void continueRecording() {
+  if (queue1.available() >= 2) {
+    byte buffer[512];
+
+    memcpy(buffer, queue1.readBuffer(), 256);
+    queue1.freeBuffer();
+
+    memcpy(buffer + 256, queue1.readBuffer(), 256);
+    queue1.freeBuffer();
+
+    frec.write(buffer, 512);
+  }
+}
+
+void stopRecording() {
+  Serial.println("Arret enregistrement");
+
   queue1.end();
 
   while (queue1.available() > 0) {
+    frec.write((byte*)queue1.readBuffer(), 256);
     queue1.freeBuffer();
   }
 
   frec.close();
   recording = false;
+  fileReady = true;
 
-  Serial.println("Enregistrement termine");
-
-  /*File f = SD.open("REC.RAW");
-  Serial.print("Taille fichier = ");
-  Serial.println(f.size());
-  f.close();
-
-  delay(1000);*/
-
-  /*Serial.println("Lecture...");
-  playRaw1.play("REC.RAW");*/
+  Serial.println("Fichier sauvegarde");
 }
 
-void updateMicrophone() {
-  boutonRec.update();
+void playRecording() {
+  if (recording) return;
 
-  if (boutonRec.fallingEdge()) {
-    appuiDebut = millis();
-    boutonEnfonce = true;
-    appuiLongDejaDeclenche = false;
-    Serial.println("Bouton appuye...");
+  if (!fileReady && !SD.exists("RECORD.RAW")) {
+    Serial.println("Aucun fichier a lire");
+    return;
   }
 
-  if (boutonRec.risingEdge()) {
-    if(millis()-appuiDebut<3000){
-      playRaw1.play("REC.RAW");
-    }
-    boutonEnfonce = false;
-    appuiLongDejaDeclenche = false;
-    Serial.println("Bouton relache");
+  if (playing) {
+    playRaw1.stop();
+    playing = false;
+    delay(200);
   }
 
-  if (boutonEnfonce && !appuiLongDejaDeclenche && millis() - appuiDebut >= 3000) {
-    appuiLongDejaDeclenche = true;
-    demarrerEnregistrement();
-  }
-
-  if (recording && millis() - startTime > 5000) {
-    arreterEnregistrementEtLire();
-  }
-
-  if (recording && queue1.available() > 0) {
-    byte *buffer = (byte *)queue1.readBuffer();
-    frec.write(buffer, 256);
-    queue1.freeBuffer();
-  }
+  Serial.println("Lecture du fichier...");
+  playRaw1.play("RECORD.RAW");
+  playing = true;
 }
-

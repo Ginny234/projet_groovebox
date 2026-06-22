@@ -19,7 +19,7 @@ void setup() {
     tab_seq[i]=NULL;
   }
 
-  setupMicrophone();
+microphoneSetup();
 
   Serial.begin(9600);
 
@@ -80,7 +80,7 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   bouton_reset.update();
-  updateMicrophone();
+  microphoneLoop();
 
   //clear Diplay au début, aucune des fonction d'affichage ne l'utilise
   display.clearDisplay();

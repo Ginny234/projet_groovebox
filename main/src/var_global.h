@@ -3,18 +3,8 @@
 
 #include "struct.h"
 
-// GUItool: begin automatically generated code
-#include <Audio.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <SD.h>
-#include <SerialFlash.h>
-
 extern AudioInputI2S      i2s_in;
 extern AudioRecordQueue   queue1;
-extern AudioPlaySdRaw     playRaw1;
-extern AudioOutputI2S     i2s_out;
-
 
 // GUItool: begin automatically generated code
 extern AudioPlaySdWav           playSdWav7; //xy=236.3333511352539,281.66666889190674
@@ -76,6 +66,7 @@ extern AudioConnection          patchCord35;
 extern AudioConnection          patchCord36;
 extern AudioConnection          patchCord37;
 extern AudioConnection          patchCord38;
+extern AudioPlaySdRaw           playRaw1;       //xy=3827.3335914611816,224.66668319702148
 extern AudioControlSGTL5000     sgtl5000_1;     //xy=958.3333282470703,392.33330059051514
 // GUItool: end automatically generated code
 
