@@ -126,3 +126,4 @@ void lire_fichier_sequence(){
   }
 }
 
+}

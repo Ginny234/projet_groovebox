@@ -150,6 +150,7 @@ void loop() {
     //si on était en train d'enregistrer une séquence stop l'enregistrement
     else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
       sauvegarder_sequences(tab_seq);
+      printf("enregistrement terminé\n");
       fonctionnement=NORMAL;
     }
 
