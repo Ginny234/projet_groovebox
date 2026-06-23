@@ -99,22 +99,23 @@ void naviguation_effets(){
     }
 }
 
-void modifs_volume(){
+void modifs_volume(){ //gestion du volume via l'un des potentiomètres
   static long somme = 0;
   static int nb_lectures = 0;
 
-  somme += analogRead(A1);
+  somme += analogRead(A1); //pin A1 utilisé
   nb_lectures++;
 
-  if (nb_lectures >= 16) {
+  if (nb_lectures >= 16) { // moyenne sur 16 lectures pour minimiser les bruits et obtenir une valeur plus stable
     int val1 = somme / 16;
     somme = 0;
     nb_lectures = 0;
 
     int val_min = 0;
     int val_max = 4095;
-    volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0;
+    volume_courant = constrain(map(val1, val_min, val_max, 0, 1000), 0, 1000) / 1000.0; // conversion pour un volume entre 0 et 1
 
+    // lecture des valeurs brutes du potentiomètre puis conversion en volume entre 0 et 1, puis application du volume sur le SGTL5000
     sgtl5000_1.volume(volume_courant);
     Serial.print("brut A1 = ");
     Serial.print(val1);
