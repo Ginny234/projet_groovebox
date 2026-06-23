@@ -4,6 +4,7 @@ void lire_sample(int id){
   //-> permet d'avoir plusieurs sample se jouant en simultané
   //-> permet de facilement distingué quels sample sont jouée pour l'affichage
   switch(id){
+    printf("son joué:%d", id);
     case 0:
       playSdWav1.play("SnareDrum.WAV");
       break;
@@ -47,6 +48,7 @@ void fonctionnement_sample(){
     tab_boutons_son[i].update();
     if(tab_boutons_son[i].fallingEdge()){
       lire_sample(i);
+      printf("%d\n", i);
     }
   }
 }

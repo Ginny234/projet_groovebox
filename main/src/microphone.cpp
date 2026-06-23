@@ -4,7 +4,6 @@
 File frec;
 
 const int chipSelect = BUILTIN_SDCARD;
-const int buttonPin = 12;
 
 unsigned long startTime;
 bool recording = false;
@@ -15,14 +14,8 @@ bool buttonPressed = false;
 unsigned long buttonPressTime = 0;
 bool longPressDone = false;
 
-void handleButton();
-void startRecording();
-void continueRecording();
-void stopRecording();
-void playRecording();
-
 void microphoneSetup() {
-  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(PIN_BOUTON_REC, INPUT_PULLUP);
 
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
   sgtl5000_1.micGain(30);
@@ -50,11 +43,34 @@ void microphoneLoop() {
 }
 
 void handleButton() {
-  bool pressed = digitalRead(buttonPin) == LOW;
+  //bool pressed = digitalRead(PIN_BOUTON_REC) == LOW;
+  boutonRec.update();
 
-  if (pressed && !buttonPressed) {
-    delay(30);
-    if (digitalRead(buttonPin) == LOW) {
+  if(boutonRec.fallingEdge()){
+    printf("premier appui\n");
+    debut_attente=millis();
+    while(digitalRead(PIN_BOUTON_REC)==LOW){
+      printf("t'apuies sur le bouton\n");
+      fin_attente=millis();
+    }
+    printf("t'as arreter d'appuyé, temps attentte:%d\n", fin_attente-debut_attente);
+    //si on était sur une séquence vide lors de l'appui ou qu'on a appuier pendant plus de 3 secondes onenregistrer une séquence à cet emplacement
+    if(fin_attente-debut_attente>3000 || SD.exists("RECORD.RAW")==false){
+      //printf("on lit un truc\n");
+      startRecording();
+    }
+    //sinon on lit simplement la séquence
+    else if (SD.exists("RECORD.RAW")){
+      playRecording();
+      //playRaw1.play("RECORD.RAW");
+      //printf("yay\n");
+    }
+  }
+
+  /*if (pressed && !buttonPressed) {
+    //delay(30);
+    if (digitalRead(PIN_BOUTON_REC) == LOW) {
+      printf("c'est apuyé\n");
       buttonPressed = true;
       buttonPressTime = millis();
       longPressDone = false;
@@ -70,14 +86,14 @@ void handleButton() {
 
   if (!pressed && buttonPressed) {
     delay(30);
-    if (digitalRead(buttonPin) == HIGH) {
+    if (digitalRead(PIN_BOUTON_REC) == HIGH) {
       buttonPressed = false;
 
       if (!longPressDone) {
         playRecording();
       }
     }
-  }
+  }*/
 }
 
 void startRecording() {
@@ -108,16 +124,14 @@ void startRecording() {
 }
 
 void continueRecording() {
-  if (queue1.available() >= 2) {
-    byte buffer[512];
 
-    memcpy(buffer, queue1.readBuffer(), 256);
+  while (queue1.available()) {
+
+    void *buffer = queue1.readBuffer();
+
+    frec.write(buffer, 256);
+
     queue1.freeBuffer();
-
-    memcpy(buffer + 256, queue1.readBuffer(), 256);
-    queue1.freeBuffer();
-
-    frec.write(buffer, 512);
   }
 }
 

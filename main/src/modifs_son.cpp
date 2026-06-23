@@ -60,10 +60,15 @@ void setup_mixers(){
   mixer7.gain(2, 0.8);
   mixer7.gain(3, 0.8);
 
-  mixer8.gain(0, 0);
+  mixer8.gain(0, 0.8);
   mixer8.gain(1, 0.8);
   mixer8.gain(2, 0.8);
   mixer8.gain(3, 0.8);
+
+  mixer9.gain(0, 0.8);
+  mixer9.gain(1, 0.8);
+  mixer9.gain(2, 0.8);
+  mixer9.gain(3, 0.8);
 }
 
 void naviguation_effets(){

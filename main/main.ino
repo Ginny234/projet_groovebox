@@ -19,7 +19,7 @@ void setup() {
     tab_seq[i]=NULL;
   }
 
-microphoneSetup();
+
 
   Serial.begin(9600);
 
@@ -40,7 +40,7 @@ microphoneSetup();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
-  AudioMemory(30);
+  AudioMemory(120);
 
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.8);
@@ -56,11 +56,18 @@ microphoneSetup();
 
   reverb1.reverbTime(0.5);
 
-  for(int i=0; i!=7; i++){
+  /*for(int i=0; i!=7; i++){
     pinMode(i, INPUT_PULLUP);
-  }
+  }*/
   //jsp pk mais ca veut pas pr la 7
   //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
+  pinMode(0, INPUT_PULLUP);
+  pinMode(1, INPUT_PULLUP);
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
+  pinMode(5, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
   pinMode(9, INPUT_PULLUP);
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
@@ -73,15 +80,19 @@ microphoneSetup();
 
   lire_fichier_sequence();
   printf("fin du setup");
+
+    microphoneSetup();
 }
 
 void loop() {
+  delay(100);
   //mise à jour des boutons etc
   bouton_ok.update();
   bouton_sequence.update();
-  bouton_reset.update();
+  //bouton_reset.update();
   microphoneLoop();
 
+  
   //clear Diplay au début, aucune des fonction d'affichage ne l'utilise
   display.clearDisplay();
   
@@ -155,11 +166,11 @@ void loop() {
     }*/
   }
 
-  if(bouton_reset.fallingEdge()){
+  /*if(bouton_reset.fallingEdge()){
     reset();
-  }
+  }*/
 
-  modifs_volume();
+  //modifs_volume();
   //fonctionnement_sample();
   fonctionnement_effets();
   fonctionnement_sample();

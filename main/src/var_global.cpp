@@ -1,6 +1,5 @@
 #include "var_global.h"
 
-
 // GUItool: begin automatically generated code
 AudioInputI2S            i2s_in;         //xy=3005.3335876464844,174.6666774749756
 AudioRecordQueue         queue1;         //xy=3091.3335876464844,334.6666774749756
@@ -16,17 +15,19 @@ AudioMixer4              mixer2;         //xy=3663.33349609375,658.6666564941406
 AudioMixer4              mixer1;         //xy=3700.33349609375,386.6666564941406
 AudioMixer4              mixer4;         //xy=3711.33349609375,593.6666564941406
 AudioMixer4              mixer3;         //xy=3717.33349609375,490.6666564941406
-AudioPlaySdRaw           playRaw1;       //xy=3827.3335914611816,224.66668319702148
+AudioPlaySdRaw           playRaw1;       //xy=3837.333610534668,458.6666946411133
 AudioMixer4              mixer6;         //xy=3860.33349609375,621.6666564941406
 AudioMixer4              mixer5;         //xy=3878.33349609375,427.6666564941406
 AudioMixer4              mixer7;         //xy=3958.33349609375,525.6666564941406
-AudioEffectReverb        reverb1;        //xy=4050.33349609375,385.6666564941406
+AudioMixer4              mixer9; //xy=4000.6671104431152,460.66669845581055
 AudioFilterStateVariable filter1;        //xy=4156.33349609375,298.6666564941406
-AudioMixer4              mixer8;         //xy=4251.3336181640625,552.6666717529297
+AudioEffectReverb        reverb1;        //xy=4188.3333740234375,395.66669845581055
 AudioSynthWaveform       modulator;      //xy=4270.33349609375,235.66665649414062
+AudioMixer4              mixer8;         //xy=4291.333377838135,516.6667032241821
 AudioEffectMultiply      multiply1;      //xy=4309.33349609375,358.6666564941406
 AudioOutputI2S           i2s1;           //xy=4378.33349609375,480.6666564941406
-AudioConnection          patchCord1(i2s_in, 0, queue1, 0);
+AudioConnection          patchCord1(i2s_in, 1, queue1, 0);
+AudioConnection          patchCord44(i2s_in, 0, queue1, 0);
 AudioConnection          patchCord2(playSdWav7, 0, mixer4, 0);
 AudioConnection          patchCord3(playSdWav7, 1, mixer4, 1);
 AudioConnection          patchCord4(playSdWav8, 0, mixer4, 2);
@@ -51,23 +52,27 @@ AudioConnection          patchCord22(mixer4, 0, mixer6, 0);
 AudioConnection          patchCord23(mixer4, 0, mixer6, 1);
 AudioConnection          patchCord24(mixer3, 0, mixer5, 2);
 AudioConnection          patchCord25(mixer3, 0, mixer5, 3);
-AudioConnection          patchCord26(playRaw1, 0, mixer8, 3);
+AudioConnection          patchCord26(playRaw1, 0, mixer9, 0);
+AudioConnection          patchCord43(playRaw1, 0, mixer9, 3);
 AudioConnection          patchCord27(mixer6, 0, mixer7, 2);
 AudioConnection          patchCord28(mixer6, 0, mixer7, 3);
 AudioConnection          patchCord29(mixer5, 0, mixer7, 0);
 AudioConnection          patchCord30(mixer5, 0, mixer7, 1);
-AudioConnection          patchCord31(mixer7, 0, mixer8, 1);
-AudioConnection          patchCord32(mixer7, reverb1);
-AudioConnection          patchCord33(mixer7, 0, filter1, 0);
-AudioConnection          patchCord34(mixer7, 0, filter1, 1);
-AudioConnection          patchCord35(reverb1, 0, mixer8, 0);
-AudioConnection          patchCord36(filter1, 1, multiply1, 0);
-AudioConnection          patchCord37(mixer8, 0, i2s1, 0);
-AudioConnection          patchCord38(mixer8, 0, i2s1, 1);
+AudioConnection          patchCord31(mixer7, 0, mixer9, 1);
+AudioConnection          patchCord32(mixer7, 0, mixer9, 2);
+AudioConnection          patchCord33(mixer9, reverb1);
+AudioConnection          patchCord34(mixer9, 0, filter1, 0);
+AudioConnection          patchCord35(mixer9, 0, filter1, 1);
+AudioConnection          patchCord36(mixer9, 0, mixer8, 1);
+AudioConnection          patchCord37(filter1, 1, multiply1, 0);
+AudioConnection          patchCord38(reverb1, 0, mixer8, 0);
 AudioConnection          patchCord39(modulator, 0, multiply1, 1);
-AudioConnection          patchCord40(multiply1, 0, mixer8, 2);
+AudioConnection          patchCord40(mixer8, 0, i2s1, 0);
+AudioConnection          patchCord41(mixer8, 0, i2s1, 1);
+AudioConnection          patchCord42(multiply1, 0, mixer8, 2);
 AudioControlSGTL5000     sgtl5000_1;     //xy=4053.33349609375,600.6666564941406
 // GUItool: end automatically generated code
+
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -85,7 +90,7 @@ Bounce bouton_ok = Bounce(SW, 15);
 Bounce tab_boutons_son[NBR_BOUTONS_SON]={button0, button1, button2, button3, button4, button5, button6};
 Bounce boutonRec = Bounce(PIN_BOUTON_REC, 15);
 Bounce bouton_effets = Bounce(11, 15);
-Bounce bouton_reset = Bounce(13, 15);
+//Bounce bouton_reset = Bounce(13, 15);
 
 //autres variables
 etat fonctionnement;
