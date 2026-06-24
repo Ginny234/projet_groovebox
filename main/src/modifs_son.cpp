@@ -60,10 +60,15 @@ void setup_mixers(){
   mixer7.gain(2, 0.8);
   mixer7.gain(3, 0.8);
 
-  mixer8.gain(0, 0);
+  mixer8.gain(0, 0.8);
   mixer8.gain(1, 0.8);
   mixer8.gain(2, 0.8);
   mixer8.gain(3, 0.8);
+
+  mixer9.gain(0, 0.8);
+  mixer9.gain(1, 0.8);
+  mixer9.gain(2, 0.8);
+  mixer9.gain(3, 0.8);
 }
 
 void naviguation_effets(){
@@ -117,10 +122,10 @@ void modifs_volume(){ //gestion du volume via l'un des potentiomètres
 
     // lecture des valeurs brutes du potentiomètre puis conversion en volume entre 0 et 1, puis application du volume sur le SGTL5000
     sgtl5000_1.volume(volume_courant);
-    Serial.print("brut A1 = ");
+    /*Serial.print("brut A1 = ");
     Serial.print(val1);
     Serial.print("  ->  volume = ");
-    Serial.println(volume_courant);
+    Serial.println(volume_courant);*/
   }
 }
 

@@ -4,40 +4,31 @@
 #include "struct.h"
 
 // GUItool: begin automatically generated code
-#include <Audio.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <SD.h>
-#include <SerialFlash.h>
-
-extern AudioInputI2S      i2s_in;
-extern AudioRecordQueue   queue1;
-extern AudioPlaySdRaw     playRaw1;
-extern AudioOutputI2S     i2s_out;
-
-
-// GUItool: begin automatically generated code
-extern AudioPlaySdWav           playSdWav7; //xy=236.3333511352539,281.66666889190674
-extern AudioPlaySdWav           playSdWav8; //xy=254.3333511352539,324.6666851043701
-extern AudioPlaySdWav           playSdWav4; //xy=317.33333587646484,450.6666650772095
-extern AudioPlaySdWav           playSdWav3; //xy=331.3333435058594,403.6666660308838
-extern AudioPlaySdWav           playSdWav1;     //xy=380.6666488647461,162.3333396911621
-extern AudioPlaySdWav           playSdWav2; //xy=384.33333587646484,205.6666841506958
-extern AudioPlaySdWav           playSdWav5; //xy=423.33333587646484,277.66668701171875
-extern AudioPlaySdWav           playSdWav6; //xy=427.33333587646484,342.6666889190674
-extern AudioMixer4              mixer2;         //xy=568.3333435058594,450.333345413208
-extern AudioMixer4              mixer1;         //xy=605.3333435058594,178.3333396911621
-extern AudioMixer4              mixer4; //xy=616.3333740234375,385.66668701171875
-extern AudioMixer4              mixer3;         //xy=622.3333511352539,282.3333320617676
-extern AudioMixer4              mixer6; //xy=765.6666679382324,413.33333015441895
-extern AudioMixer4              mixer5; //xy=783.6666030883789,219.33332061767578
-extern AudioMixer4              mixer7; //xy=863.6666793823242,317.3333396911621
-extern AudioEffectReverb        reverb1;        //xy=955.238166809082,177.61904430389404
-extern AudioFilterStateVariable filter1;        //xy=1061.428554534912,90.4761905670166
-extern AudioMixer4              mixer8; //xy=1104.6666564941406,272.333309173584
-extern AudioOutputI2S           i2s1;           //xy=1283.6666946411133,272.33333587646484
-extern AudioSynthWaveform       modulator;      //xy=1175.71435546875,27.619056701660156
-extern AudioEffectMultiply      multiply1;      //xy=1214.2858200073242,150.47620487213135
+extern AudioInputI2S            i2s_in;         //xy=3005.3335876464844,174.6666774749756
+extern AudioRecordQueue         queue1;         //xy=3091.3335876464844,334.6666774749756
+extern AudioPlaySdWav           playSdWav7;     //xy=3331.33349609375,489.6666564941406
+extern AudioPlaySdWav           playSdWav8;     //xy=3349.33349609375,532.6666564941406
+extern AudioPlaySdWav           playSdWav4;     //xy=3412.33349609375,658.6666564941406
+extern AudioPlaySdWav           playSdWav3;     //xy=3426.33349609375,611.6666564941406
+extern AudioPlaySdWav           playSdWav1;     //xy=3477.33349609375,360.6666564941406
+extern AudioPlaySdWav           playSdWav2;     //xy=3479.33349609375,413.6666564941406
+extern AudioPlaySdWav           playSdWav5;     //xy=3518.33349609375,485.6666564941406
+extern AudioPlaySdWav           playSdWav6;     //xy=3522.33349609375,550.6666564941406
+extern AudioMixer4              mixer2;         //xy=3663.33349609375,658.6666564941406
+extern AudioMixer4              mixer1;         //xy=3700.33349609375,386.6666564941406
+extern AudioMixer4              mixer4;         //xy=3711.33349609375,593.6666564941406
+extern AudioMixer4              mixer3;         //xy=3717.33349609375,490.6666564941406
+extern AudioPlaySdRaw           playRaw1;       //xy=3837.333610534668,458.6666946411133
+extern AudioMixer4              mixer6;         //xy=3860.33349609375,621.6666564941406
+extern AudioMixer4              mixer5;         //xy=3878.33349609375,427.6666564941406
+extern AudioMixer4              mixer7;         //xy=3958.33349609375,525.6666564941406
+extern AudioMixer4              mixer9; //xy=4000.6671104431152,460.66669845581055
+extern AudioFilterStateVariable filter1;        //xy=4156.33349609375,298.6666564941406
+extern AudioEffectReverb        reverb1;        //xy=4188.3333740234375,395.66669845581055
+extern AudioSynthWaveform       modulator;      //xy=4270.33349609375,235.66665649414062
+extern AudioMixer4              mixer8;         //xy=4291.333377838135,516.6667032241821
+extern AudioEffectMultiply      multiply1;      //xy=4309.33349609375,358.6666564941406
+extern AudioOutputI2S           i2s1;           //xy=4378.33349609375,480.6666564941406
 extern AudioConnection          patchCord1;
 extern AudioConnection          patchCord2;
 extern AudioConnection          patchCord3;
@@ -76,7 +67,11 @@ extern AudioConnection          patchCord35;
 extern AudioConnection          patchCord36;
 extern AudioConnection          patchCord37;
 extern AudioConnection          patchCord38;
-extern AudioControlSGTL5000     sgtl5000_1;     //xy=958.3333282470703,392.33330059051514
+extern AudioConnection          patchCord39;
+extern AudioConnection          patchCord40;
+extern AudioConnection          patchCord41;
+extern AudioConnection          patchCord42;
+extern AudioControlSGTL5000     sgtl5000_1;     //xy=4053.33349609375,600.6666564941406
 // GUItool: end automatically generated code
 
 extern Adafruit_SSD1306 display;
@@ -93,7 +88,7 @@ extern Bounce bouton_sequence;
 extern Bounce bouton_ok;
 extern Bounce tab_boutons_son[NBR_BOUTONS_SON];
 extern Bounce boutonRec;
-extern Bounce bouton_reset;
+//extern Bounce bouton_reset;
 extern Bounce bouton_effets;
 
 //autres variables
