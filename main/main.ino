@@ -168,16 +168,13 @@ void loop() {
       printf("enregistrement terminé\n");
       fonctionnement=NORMAL;
     }
-
-    /*if(fonctionnement==LECTURE_SEQUENCE){
-      fonctionnement=NORMAL;
-    }*/
   }
 
-  /*if(bouton_reset.fallingEdge()){
+  if(bouton_reset.fallingEdge()){
     reset();
-  }*/
+  }
 
+  modifs_volume();
   fonctionnement_effets();
   fonctionnement_sample();
   
