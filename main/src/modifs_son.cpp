@@ -173,10 +173,10 @@ void modifs_volume(){ //gestion du volume via l'un des potentiomètres
   sgtl5000_1.volume(volume_courant);
   
   // Affichage pour le débogage
-  Serial.print("brut A1 = ");
+  /*Serial.print("brut A1 = ");
   Serial.print(val1);
   Serial.print("  ->  volume = ");
-  Serial.println(volume_courant);
+  Serial.println(volume_courant);*/
 }
 
 void fonctionnement_effets(){

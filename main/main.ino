@@ -77,7 +77,7 @@ void setup() {
   pinMode(6, INPUT_PULLUP);
   pinMode(9, INPUT_PULLUP);
   pinMode(11, INPUT_PULLUP);
-  pinMode(12, INPUT_PULLUP);
+  pinMode(24, INPUT_PULLUP);
   
   pinMode(CLK, INPUT_PULLUP);
   pinMode(DT, INPUT_PULLUP);
@@ -97,7 +97,6 @@ void loop() {
   bouton_ok.update();
   bouton_sequence.update();
   aigue_grave();
-  //bouton_reset.update();
   microphoneLoop();
   if (recording || playing) {
     affichage_microphone();
@@ -174,7 +173,9 @@ void loop() {
     }
   }
 
+  bouton_reset.update();
   if(bouton_reset.fallingEdge()){
+    printf("reset\n");
     reset();
   }
 

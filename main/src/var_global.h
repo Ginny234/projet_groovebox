@@ -89,7 +89,7 @@ extern Bounce bouton_sequence;
 extern Bounce bouton_ok;
 extern Bounce tab_boutons_son[NBR_BOUTONS_SON];
 extern Bounce boutonRec;
-//extern Bounce bouton_reset;
+extern Bounce bouton_reset;
 extern Bounce bouton_effets;
 
 //autres variables
