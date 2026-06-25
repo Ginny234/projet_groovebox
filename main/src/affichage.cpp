@@ -1,4 +1,5 @@
 #include "affichage.h"
+#include "microphone.h"
 
 void affichage_menu(int position_actuelle){
   display.setCursor(0, 10); //marge pour laisser de la place à l'affichage des samples
@@ -86,4 +87,31 @@ void affichage_enregistrement(){ //enregistrement des séquence
     display.print("Enregistrement\n");
     display.setCursor(0, SCREEN_HEIGHT-25);
     display.print("Appuyez sur ok pour \nterminer");
+}
+
+void affichage_microphone() {
+  display.clearDisplay();
+
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("Micro");
+
+  display.setCursor(0, 20);
+
+  if (recording) {
+    display.print("Enregistrement...");
+  }
+  else if (playing) {
+    display.print("Lecture...");
+  }
+  else {
+    display.print("Pret");
+  }
+
+  display.setCursor(0, 40);
+  display.print("Appui long: REC");
+  display.setCursor(0, 50);
+  display.print("Appui court: Lire");
+
+  display.display();
 }

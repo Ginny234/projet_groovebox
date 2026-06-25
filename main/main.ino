@@ -91,6 +91,10 @@ void loop() {
   bouton_sequence.update();
   //bouton_reset.update();
   microphoneLoop();
+  if (recording || playing) {
+    affichage_microphone();
+    return;
+  }
 
   
   //clear Diplay au début, aucune des fonction d'affichage ne l'utilise
