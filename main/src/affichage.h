@@ -9,5 +9,7 @@ void affichage_sample(int id_sample);
 void affichage_normal();
 void affichage_base();
 void affichage_enregistrement();
+void affichage_microphone();
+
 
 #endif
