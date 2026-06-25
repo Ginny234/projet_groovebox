@@ -23,7 +23,7 @@ void baisser_volume(){
   }
 }
 
-/*void aigue_grave(){
+void aigue_grave(){
   // =========================
 // POTENTIOMÈTRE + LISSAGE
 // =========================
@@ -78,7 +78,7 @@ if (pitchRatio != ancienPitch) {
   Serial.println(pitchRatio, 2);
 }
 }
-*/
+
 //une seule fonction pour le setup des mixers pour rendre l'affichage plus lisible
 void setup_mixers(){
   mixer1.gain(0, 0.8);

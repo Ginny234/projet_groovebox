@@ -4,6 +4,7 @@
 #include "struct.h"
 
 // GUItool: begin automatically generated code
+extern AudioEffectGranular      granular1;      //xy=4550.667125701904,470.66669845581055
 extern AudioInputI2S            i2s_in;         //xy=3005.3335876464844,174.6666774749756
 extern AudioRecordQueue         queue1;         //xy=3091.3335876464844,334.6666774749756
 extern AudioPlaySdWav           playSdWav7;     //xy=3331.33349609375,489.6666564941406
