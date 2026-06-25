@@ -29,8 +29,11 @@ Notre objectif etait de créer une groovebox complète et fonctionnelle, jouant 
 
 ## Instructions de compilation
 
-Installer les bibliothèques Adafruit GFX library et Adafruit SSD1306 et le board manager Teensy.
-Après cela, ouvrir dans le dossier main le fichier du même nom avec arduino et cliquez sur upload pour mettre le code sur la teensy
+- Mettre en place le board manager Teensy (de préference Teensy 4.1)
+- Installer les bibliothèques Adafruit GFX library et Adafruit SSD1306
+- Ouvrir le dossier main et le fichier du même nom sur arduino
+- Cliquez sur upload pour transferer le code sur la Teensy
+
 --------------------------------------------------
 
 ## Structure du code
