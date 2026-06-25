@@ -1,3 +1,4 @@
+#include <math.h>
 #include "src/struct.h"
 #include "src/var_global.h"
 #include "src/affichage.h"
@@ -39,6 +40,12 @@ void setup() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
+
+  analogReadResolution(10);
+  analogReadAveraging(16);
+
+  granular1.begin(granularMemory, GRANULAR_MEMORY_SIZE);
+  granular1.beginPitchShift(12.0f);
 
   AudioMemory(120);
 
@@ -89,6 +96,7 @@ void loop() {
   //mise à jour des boutons etc
   bouton_ok.update();
   bouton_sequence.update();
+  aigue_grave();
   //bouton_reset.update();
   microphoneLoop();
 
