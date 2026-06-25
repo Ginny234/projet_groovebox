@@ -9,12 +9,6 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#include "sounds/AudioSampleSnare.h"        // http://www.freesound.org/people/KEVOY/sounds/82583/
-#include "sounds/AudioSampleTomtom.h"       // http://www.freesound.org/people/zgump/sounds/86334/
-#include "sounds/AudioSampleHihat.h"        // http://www.freesound.org/people/mhc/sounds/102790/
-#include "sounds/AudioSampleKick.h"         // http://www.freesound.org/people/DWSD/sounds/171104/
-#include "sounds/AudioSampleGong.h"         // http://www.freesound.org/people/juskiddink/sounds/86773/
-#include "sounds/AudioSampleCashregister.h" // http://www.freesound.org/people/kiddpark/sounds/201159/
 #include <Bounce.h>
 
 #define NBR_SEQUENCES 4
