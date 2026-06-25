@@ -1,11 +1,3 @@
-// Advanced Microcontroller-based Audio Workshop
-//
-// http://www.pjrc.com/store/audio_tutorial_kit.html
-// https://hackaday.io/project/8292-microcontroller-audio-workshop-had-supercon-2015
-// 
-// Part 2-3: Playing Samples
-
-// WAV files converted to code by wav2sketch
 #include <math.h>
 #include "src/struct.h"
 #include "src/var_global.h"
@@ -14,15 +6,23 @@
 #include "src/modifs_son.h"
 #include "src/samples.h"
 #include "src/sequences.h"
+#include "src/microphone.h"
+#include <Encoder.h>
+
+Encoder myEnc(DT, CLK);
+long oldPosition  = -999;
 
 void setup() {
-  Serial.begin(9600);
-  for (int i=0; i!=NBR_BOUTONS; i++){
-    pinMode(i, INPUT_PULLUP);
+  volume_courant=1.0f;
+  fonctionnement=NORMAL;
+
+  for(int i=0; i!=NBR_SEQUENCES; i++){
+    tab_seq[i]=NULL;
   }
-  //for(int i=0; i!=NBR_SEQUENCES; i++){
-  //  tab_seq[i]=NULL;
-  //}
+
+
+
+  Serial.begin(9600);
 
   // Initialisation I2C sur Teensy (pins 18/19 par défaut)
   Wire.begin();
@@ -32,6 +32,11 @@ void setup() {
     while (1);
   }
 
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("Erreur SD");
+    while (1);
+  }
+  
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
@@ -39,135 +44,148 @@ void setup() {
   analogReadResolution(10);
   analogReadAveraging(16);
 
-  fonctionnement=NORMAL;
-  AudioMemory(20);
-  sgtl5000_1.enable();
-  sgtl5000_1.volume(volume_courant);
-  mixer1.gain(0, 0.18);
-  mixer1.gain(1, 0.18);
-  mixer1.gain(2, 0.18);
-  mixer1.gain(3, 0.18);
   granular1.begin(granularMemory, GRANULAR_MEMORY_SIZE);
   granular1.beginPitchShift(12.0f);
-  Serial.println("Pitch monitoring started");
+
+  AudioMemory(120);
+
+  sgtl5000_1.enable();
+  sgtl5000_1.volume(0.8);
+
+  // Voix propre type radio
+  filter1.frequency(1000);
+  filter1.resonance(1.5);
+
+  // Robot léger
+  modulator.begin(WAVEFORM_SINE);
+  modulator.frequency(35); // essaie 25, 35, 50
+  modulator.amplitude(0.5); // plus petit = plus propre
+
+  reverb1.reverbTime(0.5);
+
+  /*for(int i=0; i!=7; i++){
+    pinMode(i, INPUT_PULLUP);
+  }*/
+  //jsp pk mais ca veut pas pr la 7
+  //pareil la 8 ça fait des truc spéciaux aussi jsp si c'est le programme, la teensy ou la breadboard...
+  pinMode(0, INPUT_PULLUP);
+  pinMode(1, INPUT_PULLUP);
+  pinMode(2, INPUT_PULLUP);
+  pinMode(3, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
+  pinMode(5, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
+  pinMode(9, INPUT_PULLUP);
+  pinMode(11, INPUT_PULLUP);
+  pinMode(12, INPUT_PULLUP);
+  
+  pinMode(CLK, INPUT_PULLUP);
+  pinMode(DT, INPUT_PULLUP);
+  pinMode(SW, INPUT_PULLUP);
+
+  setup_mixers();
+
+  lire_fichier_sequence();
+  printf("fin du setup");
+
+    microphoneSetup();
 }
 
 void loop() {
-  // Update all the button objects
-  bouton_haut.update();
-  bouton_bas.update();
+  delay(100);
+  //mise à jour des boutons etc
   bouton_ok.update();
   bouton_sequence.update();
-  display.clearDisplay();
   aigue_grave();
-  //affichage_normal();
-  fonctionnement_sample();
-  // Controle du volume en etat NORMAL
-  if (fonctionnement==NORMAL){
-    if(playMem1.isPlaying() || playMem2.isPlaying() || playMem3.isPlaying()){
-      affichage_sample(0);
-      //display.setCursor(0, 0);
-      //display.print("Sample jouée");
-      //display.display();
-      //delay(300);
-    }
-    affichage_normal();
-    if (bouton_haut.fallingEdge()){
-      augmenter_volume();
-      printf("je dois augmenter le volume");
-    }
-    if (bouton_bas.fallingEdge()){
-      baisser_volume();
-      printf("je dois baisser le volume");
-    }
-  }
+  //bouton_reset.update();
+  microphoneLoop();
+
   
+  //clear Diplay au début, aucune des fonction d'affichage ne l'utilise
+  display.clearDisplay();
+  
+  //fonctionement du bouton encodeur
   if (fonctionnement==MENU){
-    affichage_menu(position_menu);
-    if (bouton_haut.fallingEdge()){
-      printf("haut\n");
-      position_menu=baisser_position(position_menu);
-      affichage_menu(position_menu);
-    }
-    if (bouton_bas.fallingEdge()){
-      position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
-      affichage_menu(position_menu);
-      printf("bas\n");
-    }
-    //rising edge parce que si c'est pas l'inverse ça considérait qu'on appuyait sur le bouton 2 fois
-    if (bouton_ok.fallingEdge()){
-      if(tab_seq[position_menu]!=NULL){
-        printf("je suis censer lire  une sequence\n");
-        lire_sequence(tab_seq[position_menu]);
+    long newPosition = myEnc.read();
+    //compare les position du bouton -> si différente, doit naviguer dans le menu
+    if (newPosition != oldPosition) {
+      if(newPosition<oldPosition){
+        position_menu=monter_position(position_menu, NBR_SEQUENCES-1);
       }
       else{
-        fonctionnement=ENREGISTREMENT_SEQUENCE;
-        printf("fonct:%d\n",fonctionnement);
-        printf("enregistrement de sequence\n");
+        position_menu=baisser_position(position_menu);
       }
+      //à la fin on met à jour l'ancienne positions
+      oldPosition = newPosition;
     }
-    //affichage_menu_sequences(position_menu);
+    //on affiche le menu
+    affichage_menu(position_menu);
   }
   if(fonctionnement==ENREGISTREMENT_SEQUENCE){
-    if (button0.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(0), tab_seq[position_menu]);
-      printf("son bouton 1 seq\n");
-    }
-    if (button1.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(1), tab_seq[position_menu]);
-      printf("son bouton 2 seq\n");
-    }
-    if (button2.fallingEdge()) {
-      tab_seq[position_menu]=ajouter_sequence(initia_sequence(2), tab_seq[position_menu]);
-      printf("son bouton 3 seq\n");
-    }
-    if (bouton_ok.fallingEdge()){
-      printf("enregistrement terminé\n");
-      fonctionnement=NORMAL;
+    affichage_enregistrement();
+    for(int i=0; i!=NBR_BOUTONS_SON; i++){
+      if(tab_boutons_son[i].fallingEdge()){
+        tab_seq[position_menu]=ajouter_sequence(initia_sequence(i), tab_seq[position_menu]);
+      }
     }
   }
 
-  fonctionnement_sample();
-
+  //le comportement des bouton ok et menus changent en fonction de fonctionnement
+  //-> on regarde donc une seule fois s'il sont appuyés et agis en fonction
+  //(ça évite un bug où les boutons était considérer comment appuyés soit deux fois de suite pour un seul appui 
+  // soit jamais appuyé pour leur second comportement)
   if (bouton_sequence.fallingEdge()){
     if(fonctionnement==NORMAL){
       fonctionnement=MENU;
-      printf("bonjour je suis censé afficher un menu\n");
     }
     else if(fonctionnement==MENU){
       fonctionnement=NORMAL;
-      printf("bonjour je retourne au vide\n");
     }
+  }
+  if(bouton_ok.fallingEdge()){
+    //fonctionnemnt dans le menu
+    if(fonctionnement==MENU){
+      //pendant un appui du bouton ok, stop le fonctionnement du programme pour vérifier la longuer de l'appui
+      debut_attente=millis();
+      while(digitalRead(SW)==LOW){
+        fin_attente=millis();
+      }
+
+      //si on était sur une séquence vide lors de l'appui ou qu'on a appuier pendant plus de 3 secondes onenregistrer une séquence à cet emplacement
+      if(fin_attente-debut_attente>3000 || tab_seq[position_menu]==NULL){
+        tab_seq[position_menu]=NULL;
+        fonctionnement=ENREGISTREMENT_SEQUENCE;
+      }
+      //sinon on lit simplement la séquence
+      else if (tab_seq[position_menu]!=NULL){
+        lire_sequence(tab_seq[position_menu]);
+      }
+    }
+
+    //si on était en train d'enregistrer une séquence stop l'enregistrement
+    else if(fonctionnement==ENREGISTREMENT_SEQUENCE){
+      sauvegarder_sequences(tab_seq);
+      printf("enregistrement terminé\n");
+      fonctionnement=NORMAL;
+    }
+
+    /*if(fonctionnement==LECTURE_SEQUENCE){
+      fonctionnement=NORMAL;
+    }*/
   }
 
-  /*display.setCursor(SCREEN_WIDTH/2-strlen("GROUPE VOCODEUR")*11/4, SCREEN_HEIGHT-8);
-  display.print("GROUPE VOCODEUR\n");*/
-  affichage_base();
-  display.display();
-
-  /*int knob = analogRead(A3);
-  if (button0.fallingEdge()) {
-    if (knob < 512) {
-      playMem1.play(AudioSampleSnare);
-    } else {
-      playMem1.play(AudioSampleKick);
-    }
-  }
-  if (button1.fallingEdge()) {
-    if (knob < 512) {
-      playMem2.play(AudioSampleTomtom);
-    } else {
-      playMem4.play(AudioSampleGong);
-    }
-  }
-  if (button2.fallingEdge()) {
-    if (knob < 512) {
-      playMem3.play(AudioSampleHihat);
-    } else {
-      playMem3.play(AudioSampleCashregister);
-    }
+  /*if(bouton_reset.fallingEdge()){
+    reset();
   }*/
 
+  //modifs_volume();
+  //fonctionnement_sample();
+  fonctionnement_effets();
+  fonctionnement_sample();
+  
+  affichage_normal();//affichage des samples quand elles sont jouées
+  affichage_base();
+  display.display();
 
 }
 

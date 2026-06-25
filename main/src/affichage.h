@@ -8,5 +8,6 @@ void affichage_menu(int position_actuelle);
 void affichage_sample(int id_sample);
 void affichage_normal();
 void affichage_base();
+void affichage_enregistrement();
 
 #endif
