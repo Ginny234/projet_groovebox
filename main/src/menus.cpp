@@ -17,5 +17,5 @@ int monter_position(int position, int max){
 
 void reset(){
   supprimer_sequences(tab_seq);
-  SD.remove("RECORD.RAW");
+  SD.remove("RECORD_MIC.RAW");
 }

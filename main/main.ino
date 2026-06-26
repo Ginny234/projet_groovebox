@@ -186,6 +186,5 @@ void loop() {
   affichage_normal();//affichage des samples quand elles sont jouées
   affichage_base();
   display.display();
-
 }
 

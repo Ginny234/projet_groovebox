@@ -87,11 +87,11 @@ Bounce button3 = Bounce(3, 15);
 Bounce button4 = Bounce(4, 15);
 Bounce button5 = Bounce(5, 15);
 Bounce button6 = Bounce(6, 15);
-Bounce bouton_sequence = Bounce(10, 15);
+Bounce bouton_sequence = Bounce(11, 15);
 Bounce bouton_ok = Bounce(SW, 15);
 Bounce tab_boutons_son[NBR_BOUTONS_SON]={button0, button1, button2, button3, button4, button5, button6};
 Bounce boutonRec = Bounce(PIN_BOUTON_REC, 15);
-Bounce bouton_effets = Bounce(11, 15);
+Bounce bouton_effets = Bounce(9, 15);
 Bounce bouton_reset = Bounce(24, 15);
 
 //autres variables

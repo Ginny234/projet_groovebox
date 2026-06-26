@@ -55,14 +55,14 @@ void handleButton() {
     }
     printf("t'as arreter d'appuyé, temps attentte:%d\n", fin_attente-debut_attente);
     //si on était sur une séquence vide lors de l'appui ou qu'on a appuier pendant plus de 3 secondes onenregistrer une séquence à cet emplacement
-    if(fin_attente-debut_attente>3000 || SD.exists("RECORD.RAW")==false){
+    if(fin_attente-debut_attente>3000 || SD.exists("RECORD_MIC.RAW")==false){
       //printf("on lit un truc\n");
       startRecording();
     }
     //sinon on lit simplement la séquence
-    else if (SD.exists("RECORD.RAW")){
+    else if (SD.exists("RECORD_MIC.RAW")){
       playRecording();
-      //playRaw1.play("RECORD.RAW");
+      //playRaw1.play("RECORD_MIC.RAW");
       //printf("yay\n");
     }
   }
@@ -79,7 +79,7 @@ void handleButton() {
 
   if (pressed && buttonPressed && !longPressDone) {
     if (millis() - buttonPressTime >= 3000) {
-      startRecording();
+      startRecord_MICing();
       longPressDone = true;
     }
   }
@@ -90,7 +90,7 @@ void handleButton() {
       buttonPressed = false;
 
       if (!longPressDone) {
-        playRecording();
+        playRecord_MICing();
       }
     }
   }*/
@@ -105,11 +105,11 @@ void startRecording() {
     delay(200);
   }
 
-  if (SD.exists("RECORD.RAW")) {
-    SD.remove("RECORD.RAW");
+  if (SD.exists("RECORD_MIC.RAW")) {
+    SD.remove("RECORD_MIC.RAW");
   }
 
-  frec = SD.open("RECORD.RAW", FILE_WRITE);
+  frec = SD.open("RECORD_MIC.RAW", FILE_WRITE);
 
   if (!frec) {
     Serial.println("Erreur ouverture fichier");
@@ -155,7 +155,7 @@ void stopRecording() {
 void playRecording() {
   if (recording) return;
 
-  if (!fileReady && !SD.exists("RECORD.RAW")) {
+  if (!fileReady && !SD.exists("RECORD_MIC.RAW")) {
     Serial.println("Aucun fichier a lire");
     return;
   }
@@ -167,6 +167,6 @@ void playRecording() {
   }
 
   Serial.println("Lecture du fichier...");
-  playRaw1.play("RECORD.RAW");
+  playRaw1.play("RECORD_MIC.RAW");
   playing = true;
 }
